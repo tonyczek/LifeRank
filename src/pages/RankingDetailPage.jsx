@@ -40,6 +40,7 @@ export function RankingDetailPage() {
   const [draftCustomCategory, setDraftCustomCategory] = useState('')
   const [isExporting, setIsExporting] = useState(false)
   const [isExportOpen, setIsExportOpen] = useState(false)
+  const [shareFeedback, setShareFeedback] = useState(null)
   const exportRef = useRef(null)
   const categoryOptions = buildCategoryOptions(rankings)
   const top5ForExport = useMemo(() => {
@@ -185,14 +186,17 @@ export function RankingDetailPage() {
               </>
             )}
             <TypeBadge type={ranking.type} />
-            <button
-              type="button"
-              onClick={() => setIsExportOpen(true)}
-              disabled={isExporting}
-              className="rounded-lg bg-white px-3 py-1.5 text-xs font-medium text-[#1D1D1F] ring-1 ring-black/10 transition hover:bg-black/5 disabled:cursor-not-allowed disabled:opacity-60"
-            >
-              {isExporting ? 'Exporting...' : 'Export as image'}
-            </button>
+            <div className="flex flex-col gap-0.5">
+              <button
+                type="button"
+                onClick={() => setIsExportOpen(true)}
+                disabled={isExporting}
+                className="rounded-lg bg-white px-3 py-1.5 text-xs font-medium text-[#1D1D1F] ring-1 ring-black/10 transition hover:bg-black/5 disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                {isExporting ? 'Preparing…' : 'Share'}
+              </button>
+              <p className="max-w-[11rem] text-[10px] leading-snug text-[#6E6E73]">Share your ranking as an image</p>
+            </div>
           </div>
         </div>
 
@@ -212,10 +216,16 @@ export function RankingDetailPage() {
         </div>
       </div>
 
-      <ExportModal isOpen={isExportOpen} onClose={() => setIsExportOpen(false)}>
+      <ExportModal
+        isOpen={isExportOpen}
+        onClose={() => {
+          setIsExportOpen(false)
+          setShareFeedback(null)
+        }}
+      >
         <div className="flex max-h-[min(90vh,880px)] flex-col overflow-visible">
-          <h2 className="text-center text-lg font-semibold tracking-tight text-[#1D1D1F]">Export preview</h2>
-          <p className="mt-1 text-center text-sm text-[#6E6E73]">Download or copy the card below.</p>
+          <h2 className="text-center text-lg font-semibold tracking-tight text-[#1D1D1F]">Share your ranking</h2>
+          <p className="mt-1 text-center text-sm text-[#6E6E73]">Share your ranking as an image</p>
 
           <div className="mt-4 flex min-h-0 flex-1 justify-center overflow-y-auto overflow-x-auto py-2">
             <div className="flex shrink-0 origin-top scale-[0.78] justify-center overflow-visible">
@@ -299,9 +309,14 @@ export function RankingDetailPage() {
                   const dataUrl = await toPng(exportRef.current, { cacheBust: true, pixelRatio: 2 })
                   const blob = await (await fetch(dataUrl)).blob()
                   await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })])
-                  alert('Image copied!')
+                  setShareFeedback({ variant: 'success', message: 'Copied! Share it 🚀' })
+                  window.setTimeout(() => setShareFeedback(null), 2800)
                 } catch {
-                  alert('Could not copy image. Try Download instead.')
+                  setShareFeedback({
+                    variant: 'error',
+                    message: 'Could not copy. Try Download instead.',
+                  })
+                  window.setTimeout(() => setShareFeedback(null), 4000)
                 }
               }}
               disabled={isExporting}
@@ -310,6 +325,17 @@ export function RankingDetailPage() {
               Copy image
             </button>
           </div>
+          {shareFeedback ? (
+            <p
+              className={[
+                'mt-3 text-center text-sm font-medium',
+                shareFeedback.variant === 'success' ? 'text-emerald-700' : 'text-red-700',
+              ].join(' ')}
+              role="status"
+            >
+              {shareFeedback.message}
+            </p>
+          ) : null}
         </div>
       </ExportModal>
     </div>
