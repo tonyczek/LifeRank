@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { RankingCustomizationControls } from './RankingCustomizationControls'
 import { CategorySelector } from './CategorySelector'
 import { buildCategoryOptions } from '../utils/categories'
-import { rankingTypeHint, rankingTypeShortLabel } from '../utils/rankingTypeUi'
+import { rankingTypeHint } from '../utils/rankingTypeUi'
 
 export function CreateRankingModal({ open, onClose, onCreate, rankings = [] }) {
   const [animateIn, setAnimateIn] = useState(false)
@@ -114,47 +114,62 @@ export function CreateRankingModal({ open, onClose, onCreate, rankings = [] }) {
 
           <div>
             <label className="text-sm font-medium text-[#1D1D1F]">Type</label>
-            <div className="mt-2 grid grid-cols-1 gap-2 sm:grid-cols-3">
+            <div className="mt-2 grid grid-cols-1 gap-2 sm:grid-cols-3 sm:items-stretch">
               <button
                 type="button"
                 onClick={() => setType('rating')}
                 className={[
-                  'rounded-xl border px-3 py-2 text-left text-sm transition',
+                  'flex h-full min-h-[5.75rem] flex-col items-stretch justify-start rounded-xl border px-3 py-3 text-left transition',
                   type === 'rating'
                     ? 'border-[#0071E3] bg-[#0071E3]/5 text-[#1D1D1F]'
                     : 'border-black/10 bg-white text-[#6E6E73] hover:bg-black/5',
                 ].join(' ')}
               >
-                <div className="font-medium">{rankingTypeShortLabel('rating')}</div>
-                <div className="mt-0.5 text-xs">{rankingTypeHint('rating')}</div>
+                <div className="text-base font-semibold leading-snug text-[#1D1D1F]">
+                  <span className="mr-1.5" aria-hidden>
+                    ⭐
+                  </span>
+                  Score (1–10)
+                </div>
+                <div className="mt-2 text-xs leading-relaxed text-[#6E6E73]">{rankingTypeHint('rating')}</div>
               </button>
 
               <button
                 type="button"
                 onClick={() => setType('value')}
                 className={[
-                  'rounded-xl border px-3 py-2 text-left text-sm transition',
+                  'flex h-full min-h-[5.75rem] flex-col items-stretch justify-start rounded-xl border px-3 py-3 text-left transition',
                   type === 'value'
                     ? 'border-[#0071E3] bg-[#0071E3]/5 text-[#1D1D1F]'
                     : 'border-black/10 bg-white text-[#6E6E73] hover:bg-black/5',
                 ].join(' ')}
               >
-                <div className="font-medium">{rankingTypeShortLabel('value')}</div>
-                <div className="mt-0.5 text-xs">{rankingTypeHint('value')}</div>
+                <div className="text-base font-semibold leading-snug text-[#1D1D1F]">
+                  <span className="mr-1.5" aria-hidden>
+                    📊
+                  </span>
+                  Number
+                </div>
+                <div className="mt-2 text-xs leading-relaxed text-[#6E6E73]">{rankingTypeHint('value')}</div>
               </button>
 
               <button
                 type="button"
                 onClick={() => setType('drag')}
                 className={[
-                  'rounded-xl border px-3 py-2 text-left text-sm transition',
+                  'flex h-full min-h-[5.75rem] flex-col items-stretch justify-start rounded-xl border px-3 py-3 text-left transition',
                   type === 'drag'
                     ? 'border-[#0071E3] bg-[#0071E3]/5 text-[#1D1D1F]'
                     : 'border-black/10 bg-white text-[#6E6E73] hover:bg-black/5',
                 ].join(' ')}
               >
-                <div className="font-medium">{rankingTypeShortLabel('drag')}</div>
-                <div className="mt-0.5 text-xs">{rankingTypeHint('drag')}</div>
+                <div className="text-base font-semibold leading-snug text-[#1D1D1F]">
+                  <span className="mr-1.5" aria-hidden>
+                    ↕️
+                  </span>
+                  Manual order
+                </div>
+                <div className="mt-2 text-xs leading-relaxed text-[#6E6E73]">{rankingTypeHint('drag')}</div>
               </button>
             </div>
           </div>
