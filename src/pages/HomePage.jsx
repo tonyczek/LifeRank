@@ -26,6 +26,8 @@ export function HomePage() {
   const { rankings, createRanking, deleteRanking, addItem, replaceRankings } = useRankings()
   const { profile, replaceProfile } = useProfile()
   const importInputRef = useRef(null)
+  const settingsMenuRef = useRef(null)
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false)
   const [isCreateOpen, setIsCreateOpen] = useState(false)
   const [isIdeasOpen, setIsIdeasOpen] = useState(false)
   const [isProfileOpen, setIsProfileOpen] = useState(false)
@@ -37,6 +39,17 @@ export function HomePage() {
       viewMode === 'grouped' ? 'category' : 'all',
     )
   }, [viewMode])
+
+  useEffect(() => {
+    if (!isSettingsOpen) return
+    function onDocMouseDown(e) {
+      if (settingsMenuRef.current && !settingsMenuRef.current.contains(e.target)) {
+        setIsSettingsOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', onDocMouseDown)
+    return () => document.removeEventListener('mousedown', onDocMouseDown)
+  }, [isSettingsOpen])
   const [collapsedCategories, setCollapsedCategories] = useState({})
   const groupedRankings = useMemo(() => {
     const groups = {}
@@ -137,19 +150,67 @@ export function HomePage() {
               >
                 ✨ Ideas for rankings
               </button>
+            </div>
+            <div className="flex items-center gap-2">
               <button
                 type="button"
-                onClick={handleExportBackup}
-                className="inline-flex items-center justify-center rounded-xl bg-white px-4 py-2 text-sm font-medium text-[#1D1D1F] ring-1 ring-black/10 transition hover:bg-black/5 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0071E3]"
+                onClick={() => setIsCreateOpen(true)}
+                className="inline-flex h-10 shrink-0 items-center justify-center rounded-lg border border-transparent bg-blue-600 px-4 text-sm font-medium leading-none text-white shadow-sm transition hover:bg-blue-700 hover:shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 focus-visible:ring-offset-[#F5F5F7]"
               >
-                Export data
+                New Ranking
               </button>
+              <div className="relative" ref={settingsMenuRef}>
+                <button
+                  type="button"
+                  onClick={() => setIsSettingsOpen((open) => !open)}
+                  className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-gray-200 bg-white text-lg leading-none text-[#1D1D1F] transition hover:bg-black/5 active:scale-[0.98] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0071E3]"
+                  aria-expanded={isSettingsOpen}
+                  aria-haspopup="menu"
+                  aria-label="Settings"
+                >
+                  ⚙️
+                </button>
+                {isSettingsOpen ? (
+                  <div
+                    className="absolute right-0 top-full z-40 mt-1 min-w-[180px] rounded-xl bg-white py-2 shadow-lg ring-1 ring-black/10"
+                    role="menu"
+                  >
+                    <div className="flex flex-col">
+                      <button
+                        type="button"
+                        role="menuitem"
+                        className="px-4 py-2 text-left text-sm transition hover:bg-black/5"
+                        onClick={() => {
+                          setIsSettingsOpen(false)
+                          handleExportBackup()
+                        }}
+                      >
+                        Export data
+                      </button>
+                      <div className="my-1 border-t border-gray-100" aria-hidden />
+                      <button
+                        type="button"
+                        role="menuitem"
+                        className="px-4 py-2 text-left text-sm transition hover:bg-black/5"
+                        onClick={() => {
+                          setIsSettingsOpen(false)
+                          importInputRef.current?.click()
+                        }}
+                      >
+                        Import data
+                      </button>
+                    </div>
+                    {/* Future menu items: dark mode, reset data, about */}
+                  </div>
+                ) : null}
+              </div>
               <button
                 type="button"
-                onClick={() => importInputRef.current?.click()}
-                className="inline-flex items-center justify-center rounded-xl bg-white px-4 py-2 text-sm font-medium text-[#1D1D1F] ring-1 ring-black/10 transition hover:bg-black/5 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0071E3]"
+                onClick={() => setIsProfileOpen(true)}
+                className="flex h-10 w-10 shrink-0 cursor-pointer items-center justify-center rounded-lg border border-gray-200 bg-white leading-none text-[#1D1D1F] transition hover:bg-black/5 active:scale-[0.98] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0071E3]"
+                aria-label="Profile"
               >
-                Import data
+                <img src={profileIcon} alt="" className="h-7 w-7 object-contain" />
               </button>
               <input
                 ref={importInputRef}
@@ -160,20 +221,6 @@ export function HomePage() {
                 onChange={handleImportFileChange}
               />
             </div>
-            <button
-              type="button"
-              onClick={() => setIsCreateOpen(true)}
-              className="inline-flex items-center justify-center rounded-xl bg-[#0071E3] px-4 py-2 text-sm font-medium text-white shadow-sm transition hover:brightness-110 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0071E3] focus-visible:ring-offset-2 focus-visible:ring-offset-[#F5F5F7]"
-            >
-              New Ranking
-            </button>
-            <button
-              type="button"
-              onClick={() => setIsProfileOpen(true)}
-              className="flex items-center justify-center rounded-full p-1 transition hover:bg-gray-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0071E3]"
-            >
-              <img src={profileIcon} alt="Profile" className="h-7 w-7 object-contain" />
-            </button>
           </div>
         </div>
 
