@@ -1,5 +1,6 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useRankings } from '../hooks/useRankings'
+import { useProfile } from '../hooks/useProfile'
 import { RankingCard } from '../components/RankingCard'
 import { CreateRankingModal } from '../components/CreateRankingModal'
 import { EmptyState } from '../components/EmptyState'
@@ -7,6 +8,11 @@ import { RankingIdeasModal } from '../components/RankingIdeasModal'
 import { ProfileModal } from '../components/ProfileModal'
 import logo from '../assets/logo.png'
 import profileIcon from '../assets/profile.png'
+import {
+  normalizeImportedProfile,
+  normalizeImportedRankings,
+  parseAndValidateBackup,
+} from '../utils/backup'
 
 const VIEW_MODE_STORAGE_KEY = 'liferank_view_mode'
 
@@ -17,7 +23,9 @@ function readStoredViewMode() {
 }
 
 export function HomePage() {
-  const { rankings, createRanking, deleteRanking, addItem } = useRankings()
+  const { rankings, createRanking, deleteRanking, addItem, replaceRankings } = useRankings()
+  const { profile, replaceProfile } = useProfile()
+  const importInputRef = useRef(null)
   const [isCreateOpen, setIsCreateOpen] = useState(false)
   const [isIdeasOpen, setIsIdeasOpen] = useState(false)
   const [isProfileOpen, setIsProfileOpen] = useState(false)
@@ -42,6 +50,45 @@ export function HomePage() {
 
   function toggleCategory(category) {
     setCollapsedCategories((prev) => ({ ...prev, [category]: !prev[category] }))
+  }
+
+  function handleExportBackup() {
+    const payload = { rankings, profile }
+    const text = JSON.stringify(payload, null, 2)
+    const blob = new Blob([text], { type: 'application/json' })
+    const url = URL.createObjectURL(blob)
+    const link = document.createElement('a')
+    link.href = url
+    link.download = 'liferank-backup.json'
+    link.click()
+    window.setTimeout(() => URL.revokeObjectURL(url), 500)
+    window.alert('Backup downloaded')
+  }
+
+  function handleImportFileChange(event) {
+    const file = event.target.files?.[0]
+    event.target.value = ''
+    if (!file) return
+
+    const reader = new FileReader()
+    reader.onload = () => {
+      const text = typeof reader.result === 'string' ? reader.result : ''
+      const parsed = parseAndValidateBackup(text)
+      if (!parsed.ok) {
+        window.alert('Invalid file format')
+        return
+      }
+      const ok = window.confirm(
+        'This will replace your current rankings and profile. Continue?',
+      )
+      if (!ok) return
+
+      replaceRankings(normalizeImportedRankings(parsed.data.rankings))
+      replaceProfile(normalizeImportedProfile(parsed.data.profile))
+      window.alert('Data imported successfully')
+    }
+    reader.onerror = () => window.alert('Invalid file format')
+    reader.readAsText(file)
   }
 
   return (
@@ -90,6 +137,28 @@ export function HomePage() {
               >
                 ✨ Ideas for rankings
               </button>
+              <button
+                type="button"
+                onClick={handleExportBackup}
+                className="inline-flex items-center justify-center rounded-xl bg-white px-4 py-2 text-sm font-medium text-[#1D1D1F] ring-1 ring-black/10 transition hover:bg-black/5 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0071E3]"
+              >
+                Export data
+              </button>
+              <button
+                type="button"
+                onClick={() => importInputRef.current?.click()}
+                className="inline-flex items-center justify-center rounded-xl bg-white px-4 py-2 text-sm font-medium text-[#1D1D1F] ring-1 ring-black/10 transition hover:bg-black/5 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0071E3]"
+              >
+                Import data
+              </button>
+              <input
+                ref={importInputRef}
+                type="file"
+                accept="application/json,.json"
+                className="hidden"
+                aria-hidden
+                onChange={handleImportFileChange}
+              />
             </div>
             <button
               type="button"

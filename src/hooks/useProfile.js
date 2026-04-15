@@ -48,5 +48,19 @@ export function useProfile() {
     queueMicrotask(() => window.dispatchEvent(new Event(PROFILE_EVENT)))
   }, [])
 
-  return { profile, updateProfile }
+  const replaceProfile = useCallback((next) => {
+    const safe = {
+      name: typeof next?.name === 'string' ? next.name : '',
+      avatar: typeof next?.avatar === 'string' ? next.avatar : '',
+    }
+    setProfile(safe)
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(safe))
+    } catch {
+      /* quota or private mode */
+    }
+    queueMicrotask(() => window.dispatchEvent(new Event(PROFILE_EVENT)))
+  }, [])
+
+  return { profile, updateProfile, replaceProfile }
 }

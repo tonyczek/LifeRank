@@ -164,6 +164,17 @@ export function useRankings() {
     )
   }
 
+  function replaceRankings(nextRankings) {
+    const list = Array.isArray(nextRankings) ? nextRankings : []
+    setRankings(
+      list.map((ranking) => ({
+        ...ranking,
+        category: String(ranking?.category ?? 'Other').trim() || 'Other',
+        items: Array.isArray(ranking?.items) ? ranking.items : [],
+      })),
+    )
+  }
+
   return {
     rankings,
     createRanking,
@@ -173,6 +184,7 @@ export function useRankings() {
     deleteItem,
     updateItem,
     reorderItems,
+    replaceRankings,
   }
 }
 
