@@ -27,6 +27,14 @@ function medal(rank) {
   return '•'
 }
 
+function isImageClipboardWriteSupported() {
+  if (typeof navigator === 'undefined' || typeof window === 'undefined') return false
+  if (!window.isSecureContext) return false
+  if (!navigator.clipboard || typeof navigator.clipboard.write !== 'function') return false
+  if (typeof ClipboardItem === 'undefined') return false
+  return true
+}
+
 export function RankingDetailPage() {
   const { id } = useParams()
   const { rankings, updateRanking, addItem, deleteItem, updateItem, reorderItems } = useRankings()
@@ -43,6 +51,8 @@ export function RankingDetailPage() {
   const [shareFeedback, setShareFeedback] = useState(null)
   const exportRef = useRef(null)
   const categoryOptions = buildCategoryOptions(rankings)
+  const canCopyImageToClipboard = useMemo(() => isImageClipboardWriteSupported(), [])
+
   const top5ForExport = useMemo(() => {
     const withIndex = [...(ranking?.items ?? [])].map((item, index) => ({ item, index }))
     if ((ranking?.type ?? 'rating') === 'drag') {
@@ -305,12 +315,13 @@ export function RankingDetailPage() {
                 } catch {
                   setShareFeedback({
                     variant: 'error',
-                    message: 'Could not copy. Try Download instead.',
+                    message: 'Copy not supported in your browser. Use Download instead 👍',
                   })
                   window.setTimeout(() => setShareFeedback(null), 4000)
                 }
               }}
-              disabled={isExporting}
+              disabled={isExporting || !canCopyImageToClipboard}
+              title={canCopyImageToClipboard ? undefined : 'Not supported in this browser'}
               className="rounded-xl bg-[#0071E3] px-5 py-2.5 text-sm font-medium text-white shadow-sm transition hover:brightness-110 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0071E3] focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
             >
               Copy to clipboard
