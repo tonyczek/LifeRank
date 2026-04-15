@@ -109,7 +109,7 @@ export function HomePage() {
         </div>
 
         {rankings.length === 0 ? (
-          <EmptyState onCreate={() => setIsCreateOpen(true)} />
+          <EmptyState onCreate={() => setIsCreateOpen(true)} onIdeas={() => setIsIdeasOpen(true)} />
         ) : viewMode === 'all' ? (
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
             {rankings.map((r) => (

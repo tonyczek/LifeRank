@@ -67,6 +67,8 @@ export function ItemList({ ranking, onDeleteItem, onUpdateItem, onReorderItems }
       <EmptyState
         title="No items yet"
         description="Add your first item to start building this ranking."
+        emoji="📝"
+        showExample={false}
       />
     )
   }
