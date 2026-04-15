@@ -39,7 +39,7 @@ const EXPORT_THEME_IDS = ['default', 'dark', 'blue', 'purple', 'minimal']
 
 const EXPORT_THEME_STYLES = {
   default: {
-    container: 'bg-gradient-to-br from-white to-gray-50',
+    container: 'bg-gradient-to-br from-gray-50 to-gray-200',
     text: 'text-gray-900',
     subtext: 'text-gray-600',
     rowMuted: 'text-gray-500',
@@ -320,8 +320,8 @@ export function RankingDetailPage() {
           <h2 className="text-center text-lg font-semibold tracking-tight text-[#1D1D1F]">Share your ranking!</h2>
           <p className="mt-1 text-center text-sm text-[#6E6E73]">Ready to share 🚀</p>
 
-          <div className="mt-4 flex flex-col items-stretch gap-3 sm:mt-5 sm:flex-row sm:items-center sm:justify-between sm:gap-6">
-            <div className="flex flex-wrap gap-2 sm:justify-start">
+          <div className="mt-4 flex items-center justify-center gap-6">
+            <div className="flex flex-wrap justify-center gap-2">
               {[3, 5, 10].map((n) => (
                 <button
                   key={n}
@@ -338,11 +338,7 @@ export function RankingDetailPage() {
                 </button>
               ))}
             </div>
-            <div
-              className="flex shrink-0 items-center justify-start gap-2 sm:justify-end"
-              role="group"
-              aria-label="Export color theme"
-            >
+            <div className="flex shrink-0 items-center gap-2" role="group" aria-label="Export color theme">
               {EXPORT_THEME_IDS.map((id) => (
                 <button
                   key={id}
@@ -351,9 +347,9 @@ export function RankingDetailPage() {
                   aria-label={`Theme: ${id}`}
                   title={id}
                   className={[
-                    'h-6 w-6 shrink-0 cursor-pointer rounded-full border border-black/20 transition-all duration-150 hover:scale-110',
-                    theme === id ? 'ring-2 ring-[#0071E3] ring-offset-2 ring-offset-white' : '',
-                    id === 'default' && 'bg-gradient-to-br from-white to-gray-300',
+                    'h-6 w-6 shrink-0 cursor-pointer rounded-full border border-black/20 shadow-sm transition hover:shadow-md',
+                    theme === id ? 'ring-2 ring-black/20 scale-110' : 'hover:scale-110',
+                    id === 'default' && 'bg-gradient-to-br from-gray-100 to-gray-400',
                     id === 'dark' && 'border-gray-700 bg-gray-900',
                     id === 'blue' && 'border-blue-600 bg-blue-500',
                     id === 'purple' && 'border-purple-600 bg-purple-500',
