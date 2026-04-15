@@ -64,12 +64,7 @@ export function ItemList({ ranking, onDeleteItem, onUpdateItem, onReorderItems }
 
   if (sortedItems.length === 0) {
     return (
-      <EmptyState
-        title="No items yet"
-        description="Add your first item to start building this ranking."
-        emoji="📝"
-        showExample={false}
-      />
+      <EmptyState title="No items yet" description="Add your first item to start building this ranking." emoji="📝" />
     )
   }
 

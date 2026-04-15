@@ -1,17 +1,52 @@
+const QUICK_START_TEMPLATES = [
+  {
+    label: '🎬 Top movies',
+    name: 'Top movies',
+    emoji: '🎬',
+    type: 'rating',
+    category: 'Entertainment',
+    metricLabel: 'Score (1–10)',
+  },
+  {
+    label: '🏔️ Highest peaks climbed',
+    name: 'Highest peaks climbed',
+    emoji: '🏔️',
+    type: 'value',
+    category: 'Travel',
+    metricLabel: 'Elevation (m)',
+  },
+  {
+    label: '🌍 Best countries visited',
+    name: 'Best countries visited',
+    emoji: '🌍',
+    type: 'drag',
+    category: 'Travel',
+    metricLabel: 'Manual order',
+  },
+  {
+    label: '🍜 Favorite dishes',
+    name: 'Favorite dishes',
+    emoji: '🍜',
+    type: 'rating',
+    category: 'Food',
+    metricLabel: 'Score (1–10)',
+  },
+]
+
 export function EmptyState({
   onCreate,
   onIdeas,
+  onQuickStart,
   title = 'No rankings yet',
   description = 'Create your first ranking to start tracking and comparing what matters to you.',
   buttonLabel = 'Create ranking',
   emoji = '🏆',
-  showExample = true,
 }) {
   const hasActions = Boolean(onCreate || onIdeas)
 
   return (
     <div className="rounded-2xl bg-white p-8 shadow-[0_10px_30px_rgba(0,0,0,0.06)] ring-1 ring-black/5">
-      <div className="mx-auto flex max-w-lg flex-col items-center px-2 py-6 text-center sm:px-4 sm:py-8">
+      <div className="mx-auto flex max-w-lg flex-col items-center px-2 py-6 text-center sm:max-w-2xl sm:px-4 sm:py-8">
         <div className="text-5xl leading-none sm:text-6xl" aria-hidden>
           {emoji}
         </div>
@@ -45,15 +80,28 @@ export function EmptyState({
           </div>
         ) : null}
 
-        {showExample ? (
-          <div className="mt-10 w-full max-w-sm">
-            <p className="text-left text-xs font-medium text-[#6E6E73]">Example</p>
-            <div className="mt-2 rounded-xl bg-[#F5F5F7] px-4 py-4 text-left text-sm text-[#1D1D1F] ring-1 ring-black/5">
-              <ul className="space-y-2.5">
-                <li className="leading-snug">🥇 Interstellar</li>
-                <li className="leading-snug">🥈 Inception</li>
-                <li className="leading-snug">🥉 The Dark Knight</li>
-              </ul>
+        {onQuickStart ? (
+          <div className="mt-10 w-full max-w-2xl">
+            <h3 className="text-left text-sm font-semibold tracking-tight text-[#1D1D1F]">Try one of these</h3>
+            <div className="mt-3 flex gap-3 overflow-x-auto pb-1 [-ms-overflow-style:none] [scrollbar-width:none] sm:grid sm:grid-cols-2 sm:overflow-visible sm:pb-0 [&::-webkit-scrollbar]:hidden">
+              {QUICK_START_TEMPLATES.map((template) => (
+                <button
+                  key={template.name}
+                  type="button"
+                  onClick={() =>
+                    onQuickStart({
+                      name: template.name,
+                      type: template.type,
+                      category: template.category,
+                      metricLabel: template.metricLabel,
+                      emoji: template.emoji,
+                    })
+                  }
+                  className="min-h-[3.25rem] min-w-[11.5rem] shrink-0 rounded-xl bg-[#F5F5F7] px-3 py-3 text-left text-sm font-medium leading-snug text-[#1D1D1F] ring-1 ring-black/5 transition hover:bg-[#EBEBED] hover:ring-black/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0071E3] sm:min-w-0"
+                >
+                  {template.label}
+                </button>
+              ))}
             </div>
           </div>
         ) : null}
