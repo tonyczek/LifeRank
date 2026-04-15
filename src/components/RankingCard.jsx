@@ -66,11 +66,10 @@ export function RankingCard({ ranking, onDelete }) {
     >
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0 flex-1 pr-1">
-          <h3 className="truncate text-base font-semibold tracking-tight">
+          <h3 className="line-clamp-2 min-w-0 break-words text-base font-semibold leading-tight tracking-tight text-[#1D1D1F]">
             <span className="mr-1.5">{ranking.emoji || '🏆'}</span>
             {ranking.name}
           </h3>
-          <p className="mt-1 truncate text-sm text-[#6E6E73]">{ranking.metricLabel || '—'}</p>
         </div>
         <div className="shrink-0 self-start">
           <TypeBadge type={ranking.type} />
