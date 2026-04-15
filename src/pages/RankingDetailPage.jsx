@@ -252,8 +252,7 @@ export function RankingDetailPage() {
           <h2 className="text-center text-lg font-semibold tracking-tight text-[#1D1D1F]">Share your ranking!</h2>
           <p className="mt-1 text-center text-sm text-[#6E6E73]">Ready to share 🚀</p>
 
-          <div className="mt-5 flex flex-col items-center gap-2">
-            <span className="text-sm font-medium text-[#1D1D1F]">Items to include</span>
+          <div className="mt-5 flex justify-center">
             <div className="flex flex-wrap justify-center gap-2">
               {[3, 5, 10].map((n) => (
                 <button
@@ -261,9 +260,9 @@ export function RankingDetailPage() {
                   type="button"
                   onClick={() => setExportCount(n)}
                   className={[
-                    'rounded-lg px-3 py-1.5 text-sm font-medium transition',
+                    'rounded-xl px-3 py-1.5 text-sm font-medium transition-all duration-150 ease-in-out active:scale-[0.97]',
                     exportCount === n
-                      ? 'bg-[#0071E3] text-white'
+                      ? 'bg-[#0071E3] text-white hover:brightness-110'
                       : 'bg-white text-[#6E6E73] ring-1 ring-black/10 hover:bg-black/5 hover:text-[#1D1D1F]',
                   ].join(' ')}
                 >
@@ -273,8 +272,8 @@ export function RankingDetailPage() {
             </div>
           </div>
 
-          <div className="mt-4 flex min-h-0 flex-1 justify-center overflow-y-auto overflow-x-auto py-2">
-            <div className="flex shrink-0 origin-top scale-[0.78] justify-center overflow-visible">
+          <div className="mt-6 flex min-h-0 max-h-[70vh] flex-1 justify-center overflow-x-auto overflow-y-auto py-2">
+            <div className="flex shrink-0 origin-top scale-[0.67] justify-center overflow-visible">
               {/* Single export root: everything below must stay inside this node for toPng */}
               <div
                 ref={exportRef}
