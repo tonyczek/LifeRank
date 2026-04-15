@@ -17,7 +17,7 @@ function readStoredViewMode() {
 }
 
 export function HomePage() {
-  const { rankings, createRanking, deleteRanking } = useRankings()
+  const { rankings, createRanking, deleteRanking, addItem } = useRankings()
   const [isCreateOpen, setIsCreateOpen] = useState(false)
   const [isIdeasOpen, setIsIdeasOpen] = useState(false)
   const [isProfileOpen, setIsProfileOpen] = useState(false)
@@ -112,7 +112,17 @@ export function HomePage() {
           <EmptyState
             onCreate={() => setIsCreateOpen(true)}
             onIdeas={() => setIsIdeasOpen(true)}
-            onQuickStart={(payload) => createRanking(payload)}
+            onQuickStart={(payload) => {
+              const { starterItems = [], ...rankingPayload } = payload
+              const ranking = createRanking(rankingPayload)
+              for (const row of starterItems) {
+                addItem(ranking.id, {
+                  name: row.name,
+                  value: row.value ?? 0,
+                  notes: row.notes ?? '',
+                })
+              }
+            }}
           />
         ) : viewMode === 'all' ? (
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">

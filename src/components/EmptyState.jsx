@@ -6,6 +6,11 @@ const QUICK_START_TEMPLATES = [
     type: 'rating',
     category: 'Entertainment',
     metricLabel: 'Score (1–10)',
+    starterItems: [
+      { name: 'The Dark Knight', value: 8 },
+      { name: 'Inception', value: 9 },
+      { name: 'Interstellar', value: 10 },
+    ],
   },
   {
     label: '🏔️ Highest peaks climbed',
@@ -14,6 +19,11 @@ const QUICK_START_TEMPLATES = [
     type: 'value',
     category: 'Travel',
     metricLabel: 'Elevation (m)',
+    starterItems: [
+      { name: 'Zugspitze', value: 2962 },
+      { name: 'Matterhorn', value: 4478 },
+      { name: 'Mont Blanc', value: 4808 },
+    ],
   },
   {
     label: '🌍 Best countries visited',
@@ -22,6 +32,7 @@ const QUICK_START_TEMPLATES = [
     type: 'drag',
     category: 'Travel',
     metricLabel: 'Manual order',
+    starterItems: [{ name: 'France' }, { name: 'Italy' }, { name: 'Japan' }],
   },
   {
     label: '🍜 Favorite dishes',
@@ -30,6 +41,11 @@ const QUICK_START_TEMPLATES = [
     type: 'rating',
     category: 'Food',
     metricLabel: 'Score (1–10)',
+    starterItems: [
+      { name: 'Burger', value: 8 },
+      { name: 'Sushi', value: 9 },
+      { name: 'Pizza', value: 10 },
+    ],
   },
 ]
 
@@ -88,15 +104,11 @@ export function EmptyState({
                 <button
                   key={template.name}
                   type="button"
-                  onClick={() =>
-                    onQuickStart({
-                      name: template.name,
-                      type: template.type,
-                      category: template.category,
-                      metricLabel: template.metricLabel,
-                      emoji: template.emoji,
-                    })
-                  }
+                  onClick={() => {
+                    const payload = { ...template }
+                    delete payload.label
+                    onQuickStart(payload)
+                  }}
                   className="min-h-[3.25rem] min-w-[11.5rem] shrink-0 rounded-xl bg-[#F5F5F7] px-3 py-3 text-left text-sm font-medium leading-snug text-[#1D1D1F] ring-1 ring-black/5 transition hover:bg-[#EBEBED] hover:ring-black/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0071E3] sm:min-w-0"
                 >
                   {template.label}
