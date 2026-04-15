@@ -200,7 +200,7 @@ export function RankingDetailPage() {
               type="button"
               onClick={() => setIsExportOpen(true)}
               disabled={isExporting}
-              className="rounded-lg bg-white px-3 py-1.5 text-xs font-medium text-[#1D1D1F] ring-1 ring-black/10 transition hover:bg-black/5 disabled:cursor-not-allowed disabled:opacity-60"
+              className="rounded-lg bg-[#0071E3] px-3 py-1.5 text-xs font-medium text-white shadow-sm transition hover:brightness-110 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0071E3] focus-visible:ring-offset-2 focus-visible:ring-offset-[#F5F5F7] disabled:cursor-not-allowed disabled:opacity-60"
             >
               {isExporting ? 'Preparing…' : 'Share'}
             </button>
