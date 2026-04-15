@@ -186,17 +186,14 @@ export function RankingDetailPage() {
               </>
             )}
             <TypeBadge type={ranking.type} />
-            <div className="flex flex-col gap-0.5">
-              <button
-                type="button"
-                onClick={() => setIsExportOpen(true)}
-                disabled={isExporting}
-                className="rounded-lg bg-white px-3 py-1.5 text-xs font-medium text-[#1D1D1F] ring-1 ring-black/10 transition hover:bg-black/5 disabled:cursor-not-allowed disabled:opacity-60"
-              >
-                {isExporting ? 'Preparing…' : 'Share'}
-              </button>
-              <p className="max-w-[11rem] text-[10px] leading-snug text-[#6E6E73]">Share your ranking as an image</p>
-            </div>
+            <button
+              type="button"
+              onClick={() => setIsExportOpen(true)}
+              disabled={isExporting}
+              className="rounded-lg bg-white px-3 py-1.5 text-xs font-medium text-[#1D1D1F] ring-1 ring-black/10 transition hover:bg-black/5 disabled:cursor-not-allowed disabled:opacity-60"
+            >
+              {isExporting ? 'Preparing…' : 'Share'}
+            </button>
           </div>
         </div>
 
@@ -224,15 +221,15 @@ export function RankingDetailPage() {
         }}
       >
         <div className="flex max-h-[min(90vh,880px)] flex-col overflow-visible">
-          <h2 className="text-center text-lg font-semibold tracking-tight text-[#1D1D1F]">Share your ranking</h2>
-          <p className="mt-1 text-center text-sm text-[#6E6E73]">Share your ranking as an image</p>
+          <h2 className="text-center text-lg font-semibold tracking-tight text-[#1D1D1F]">Share your ranking!</h2>
+          <p className="mt-1 text-center text-sm text-[#6E6E73]">Ready to share 🚀</p>
 
           <div className="mt-4 flex min-h-0 flex-1 justify-center overflow-y-auto overflow-x-auto py-2">
             <div className="flex shrink-0 origin-top scale-[0.78] justify-center overflow-visible">
               {/* Single export root: everything below must stay inside this node for toPng */}
               <div
                 ref={exportRef}
-                className="box-border min-h-min w-[720px] max-w-full shrink-0 overflow-visible rounded-2xl bg-gradient-to-br from-white to-gray-50 p-10 shadow-xl"
+                className="box-border min-h-min w-[720px] max-w-full shrink-0 overflow-visible rounded-2xl bg-gradient-to-br from-white to-gray-200 p-10 shadow-xl"
               >
                 <header className="text-center">
                   <h3 className="break-words text-3xl font-semibold leading-tight tracking-tight text-gray-900">
@@ -270,7 +267,9 @@ export function RankingDetailPage() {
                         key={index}
                         className={[
                           'grid grid-cols-[2.5rem_2.25rem_minmax(0,1fr)_minmax(0,11rem)] items-center gap-3 rounded-xl px-4 py-3',
-                          isFirst ? 'bg-yellow-50 ring-1 ring-amber-100/80' : 'bg-gray-100/80 ring-1 ring-gray-200/60',
+                          isFirst
+                            ? 'bg-gradient-to-br from-amber-50 via-yellow-50 to-amber-100 ring-1 ring-amber-200/90 shadow-sm'
+                            : 'bg-gray-100/80 ring-1 ring-gray-200/60',
                         ].join(' ')}
                       >
                         <span className="text-base font-semibold text-gray-500 tabular-nums">{rank}</span>
@@ -295,14 +294,6 @@ export function RankingDetailPage() {
           <div className="mt-6 flex flex-shrink-0 flex-wrap items-center justify-center gap-3 border-t border-gray-100 pt-5">
             <button
               type="button"
-              onClick={handleExportImage}
-              disabled={isExporting}
-              className="rounded-xl bg-[#0071E3] px-5 py-2.5 text-sm font-medium text-white shadow-sm transition hover:brightness-110 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0071E3] focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
-            >
-              {isExporting ? 'Preparing…' : 'Download image'}
-            </button>
-            <button
-              type="button"
               onClick={async () => {
                 if (!exportRef.current) return
                 try {
@@ -320,9 +311,17 @@ export function RankingDetailPage() {
                 }
               }}
               disabled={isExporting}
-              className="rounded-xl bg-gray-900 px-5 py-2.5 text-sm font-medium text-white shadow-sm transition hover:bg-gray-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-400 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
+              className="rounded-xl bg-[#0071E3] px-5 py-2.5 text-sm font-medium text-white shadow-sm transition hover:brightness-110 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0071E3] focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
             >
-              Copy image
+              Copy to clipboard
+            </button>
+            <button
+              type="button"
+              onClick={handleExportImage}
+              disabled={isExporting}
+              className="rounded-xl bg-white px-5 py-2.5 text-sm font-medium text-[#1D1D1F] ring-1 ring-black/10 shadow-sm transition hover:bg-black/[0.04] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0071E3] focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
+            >
+              {isExporting ? 'Preparing…' : 'Download image'}
             </button>
           </div>
           {shareFeedback ? (
