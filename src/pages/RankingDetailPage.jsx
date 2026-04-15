@@ -48,24 +48,25 @@ export function RankingDetailPage() {
   const [draftCustomCategory, setDraftCustomCategory] = useState('')
   const [isExporting, setIsExporting] = useState(false)
   const [isExportOpen, setIsExportOpen] = useState(false)
+  const [exportCount, setExportCount] = useState(5)
   const [shareFeedback, setShareFeedback] = useState(null)
   const exportRef = useRef(null)
   const categoryOptions = buildCategoryOptions(rankings)
   const canCopyImageToClipboard = useMemo(() => isImageClipboardWriteSupported(), [])
 
-  const top5ForExport = useMemo(() => {
+  const topNForExport = useMemo(() => {
     const withIndex = [...(ranking?.items ?? [])].map((item, index) => ({ item, index }))
     if ((ranking?.type ?? 'rating') === 'drag') {
       return withIndex
         .sort((a, b) => Number(a.item?.order ?? a.index) - Number(b.item?.order ?? b.index))
         .map((entry) => entry.item)
-        .slice(0, 5)
+        .slice(0, exportCount)
     }
     return withIndex
       .sort((a, b) => Number(b.item?.value ?? 0) - Number(a.item?.value ?? 0))
       .map((entry) => entry.item)
-      .slice(0, 5)
-  }, [ranking])
+      .slice(0, exportCount)
+  }, [ranking, exportCount])
 
   if (!ranking) {
     return (
@@ -251,6 +252,27 @@ export function RankingDetailPage() {
           <h2 className="text-center text-lg font-semibold tracking-tight text-[#1D1D1F]">Share your ranking!</h2>
           <p className="mt-1 text-center text-sm text-[#6E6E73]">Ready to share 🚀</p>
 
+          <div className="mt-5 flex flex-col items-center gap-2">
+            <span className="text-sm font-medium text-[#1D1D1F]">Items to include</span>
+            <div className="flex flex-wrap justify-center gap-2">
+              {[3, 5, 10].map((n) => (
+                <button
+                  key={n}
+                  type="button"
+                  onClick={() => setExportCount(n)}
+                  className={[
+                    'rounded-lg px-3 py-1.5 text-sm font-medium transition',
+                    exportCount === n
+                      ? 'bg-[#0071E3] text-white'
+                      : 'bg-white text-[#6E6E73] ring-1 ring-black/10 hover:bg-black/5 hover:text-[#1D1D1F]',
+                  ].join(' ')}
+                >
+                  Top {n}
+                </button>
+              ))}
+            </div>
+          </div>
+
           <div className="mt-4 flex min-h-0 flex-1 justify-center overflow-y-auto overflow-x-auto py-2">
             <div className="flex shrink-0 origin-top scale-[0.78] justify-center overflow-visible">
               {/* Single export root: everything below must stay inside this node for toPng */}
@@ -279,8 +301,8 @@ export function RankingDetailPage() {
                 </div>
 
                 <div className="mt-6 space-y-3">
-                  {[0, 1, 2, 3, 4].map((index) => {
-                    const item = top5ForExport[index]
+                  {Array.from({ length: exportCount }, (_, index) => {
+                    const item = topNForExport[index]
                     const rank = index + 1
                     const isFirst = rank === 1 && Boolean(item)
                     const valueText =
