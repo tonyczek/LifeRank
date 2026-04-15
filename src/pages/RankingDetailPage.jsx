@@ -120,17 +120,30 @@ export function RankingDetailPage() {
   async function handleExportImage() {
     if (!exportRef.current) return
     setIsExporting(true)
+    let objectUrl = null
     try {
       const dataUrl = await toPng(exportRef.current, { cacheBust: true, pixelRatio: 2 })
       const response = await fetch(dataUrl)
+      if (!response.ok) throw new Error('Image response not ok')
       const blob = await response.blob()
-      const url = URL.createObjectURL(blob)
+      objectUrl = URL.createObjectURL(blob)
       const safeName = (ranking.name || 'ranking').replace(/[<>:"/\\|?*]+/g, '_').trim() || 'ranking'
       const link = document.createElement('a')
       link.download = `${safeName}.png`
-      link.href = url
+      link.href = objectUrl
       link.click()
-      window.setTimeout(() => URL.revokeObjectURL(url), 250)
+      setShareFeedback(null)
+      window.setTimeout(() => {
+        if (objectUrl) URL.revokeObjectURL(objectUrl)
+      }, 250)
+    } catch {
+      if (objectUrl) URL.revokeObjectURL(objectUrl)
+      setShareFeedback({
+        variant: 'error',
+        message:
+          'Download blocked by your browser. Try disabling your browser shields or use Chrome/Edge.',
+      })
+      window.setTimeout(() => setShareFeedback(null), 6500)
     } finally {
       setIsExporting(false)
     }
