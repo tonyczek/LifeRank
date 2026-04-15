@@ -35,6 +35,71 @@ function isImageClipboardWriteSupported() {
   return true
 }
 
+const EXPORT_THEME_IDS = ['default', 'dark', 'blue', 'purple', 'minimal']
+
+const EXPORT_THEME_STYLES = {
+  default: {
+    container: 'bg-gradient-to-br from-white to-gray-50',
+    text: 'text-gray-900',
+    subtext: 'text-gray-600',
+    rowMuted: 'text-gray-500',
+    rowName: 'text-gray-900',
+    rowValue: 'text-gray-800',
+    rowBg: 'bg-gray-100/80 ring-1 ring-gray-200/60',
+    rowFirst:
+      'bg-gradient-to-br from-amber-50 via-yellow-50 to-amber-100 ring-1 ring-amber-200/90 shadow-sm',
+    footerBorder: 'border-gray-100',
+  },
+  dark: {
+    container: 'bg-gray-900',
+    text: 'text-white',
+    subtext: 'text-gray-400',
+    rowMuted: 'text-gray-400',
+    rowName: 'text-white',
+    rowValue: 'text-gray-200',
+    rowBg: 'bg-gray-800/80 ring-1 ring-gray-600/50',
+    rowFirst:
+      'bg-gradient-to-br from-amber-900/50 via-yellow-900/40 to-amber-900/50 ring-1 ring-amber-500/40 shadow-sm',
+    footerBorder: 'border-gray-700',
+  },
+  blue: {
+    container: 'bg-gradient-to-br from-blue-500 to-indigo-600',
+    text: 'text-white',
+    subtext: 'text-blue-100',
+    rowMuted: 'text-blue-200',
+    rowName: 'text-white',
+    rowValue: 'text-blue-50',
+    rowBg: 'bg-white/15 ring-1 ring-white/25',
+    rowFirst:
+      'bg-gradient-to-br from-amber-200/95 via-yellow-100/95 to-amber-200/95 ring-1 ring-amber-300/80 shadow-sm',
+    footerBorder: 'border-white/20',
+  },
+  purple: {
+    container: 'bg-gradient-to-br from-purple-500 to-pink-500',
+    text: 'text-white',
+    subtext: 'text-purple-100',
+    rowMuted: 'text-pink-200',
+    rowName: 'text-white',
+    rowValue: 'text-pink-50',
+    rowBg: 'bg-white/15 ring-1 ring-white/25',
+    rowFirst:
+      'bg-gradient-to-br from-amber-200/95 via-yellow-100/95 to-amber-200/95 ring-1 ring-amber-300/80 shadow-sm',
+    footerBorder: 'border-white/20',
+  },
+  minimal: {
+    container: 'bg-white',
+    text: 'text-black',
+    subtext: 'text-gray-500',
+    rowMuted: 'text-gray-500',
+    rowName: 'text-black',
+    rowValue: 'text-gray-800',
+    rowBg: 'bg-gray-100 ring-1 ring-gray-200',
+    rowFirst:
+      'bg-gradient-to-br from-amber-50 via-yellow-50 to-amber-100 ring-1 ring-amber-200/90 shadow-sm',
+    footerBorder: 'border-gray-200',
+  },
+}
+
 export function RankingDetailPage() {
   const { id } = useParams()
   const { rankings, updateRanking, addItem, deleteItem, updateItem, reorderItems } = useRankings()
@@ -49,6 +114,7 @@ export function RankingDetailPage() {
   const [isExporting, setIsExporting] = useState(false)
   const [isExportOpen, setIsExportOpen] = useState(false)
   const [exportCount, setExportCount] = useState(5)
+  const [theme, setTheme] = useState('default')
   const [shareFeedback, setShareFeedback] = useState(null)
   const exportRef = useRef(null)
   const categoryOptions = buildCategoryOptions(rankings)
@@ -149,6 +215,8 @@ export function RankingDetailPage() {
       setIsExporting(false)
     }
   }
+
+  const exportTheme = EXPORT_THEME_STYLES[theme] ?? EXPORT_THEME_STYLES.default
 
   return (
     <div className="min-h-screen bg-[#F5F5F7] text-[#1D1D1F]">
@@ -252,8 +320,8 @@ export function RankingDetailPage() {
           <h2 className="text-center text-lg font-semibold tracking-tight text-[#1D1D1F]">Share your ranking!</h2>
           <p className="mt-1 text-center text-sm text-[#6E6E73]">Ready to share 🚀</p>
 
-          <div className="mt-5 flex justify-center">
-            <div className="flex flex-wrap justify-center gap-2">
+          <div className="mt-4 flex flex-col items-stretch gap-3 sm:mt-5 sm:flex-row sm:items-center sm:justify-between sm:gap-6">
+            <div className="flex flex-wrap gap-2 sm:justify-start">
               {[3, 5, 10].map((n) => (
                 <button
                   key={n}
@@ -270,6 +338,32 @@ export function RankingDetailPage() {
                 </button>
               ))}
             </div>
+            <div
+              className="flex shrink-0 items-center justify-start gap-2 sm:justify-end"
+              role="group"
+              aria-label="Export color theme"
+            >
+              {EXPORT_THEME_IDS.map((id) => (
+                <button
+                  key={id}
+                  type="button"
+                  onClick={() => setTheme(id)}
+                  aria-label={`Theme: ${id}`}
+                  title={id}
+                  className={[
+                    'h-6 w-6 shrink-0 cursor-pointer rounded-full border border-black/20 transition-all duration-150 hover:scale-110',
+                    theme === id ? 'ring-2 ring-[#0071E3] ring-offset-2 ring-offset-white' : '',
+                    id === 'default' && 'bg-gradient-to-br from-white to-gray-300',
+                    id === 'dark' && 'border-gray-700 bg-gray-900',
+                    id === 'blue' && 'border-blue-600 bg-blue-500',
+                    id === 'purple' && 'border-purple-600 bg-purple-500',
+                    id === 'minimal' && 'border-gray-300 bg-white',
+                  ]
+                    .filter(Boolean)
+                    .join(' ')}
+                />
+              ))}
+            </div>
           </div>
 
           <div className="mt-6 flex min-h-0 max-h-[70vh] flex-1 justify-center overflow-x-auto overflow-y-auto py-2">
@@ -277,10 +371,18 @@ export function RankingDetailPage() {
               {/* Single export root: everything below must stay inside this node for toPng */}
               <div
                 ref={exportRef}
-                className="box-border min-h-min w-[720px] max-w-full shrink-0 overflow-visible rounded-2xl bg-gradient-to-br from-white to-gray-200 p-10 shadow-xl"
+                className={[
+                  'box-border min-h-min w-[720px] max-w-full shrink-0 overflow-visible rounded-2xl p-10 shadow-xl',
+                  exportTheme.container,
+                ].join(' ')}
               >
                 <header className="text-center">
-                  <h3 className="break-words text-3xl font-semibold leading-tight tracking-tight text-gray-900">
+                  <h3
+                    className={[
+                      'break-words text-3xl font-semibold leading-tight tracking-tight',
+                      exportTheme.text,
+                    ].join(' ')}
+                  >
                     <span className="mr-2 inline-block align-middle">{ranking.emoji || '🏆'}</span>
                     <span className="align-middle">{ranking.name}</span>
                   </h3>
@@ -294,7 +396,7 @@ export function RankingDetailPage() {
                       className="h-10 w-10 shrink-0 rounded-full object-cover"
                     />
                   ) : null}
-                  <span className="text-base font-medium text-gray-800">
+                  <span className={['text-base font-medium', exportTheme.subtext].join(' ')}>
                     Created by {profile.name?.trim() ? profile.name.trim() : 'Anonymous'}
                   </span>
                 </div>
@@ -315,15 +417,26 @@ export function RankingDetailPage() {
                         key={index}
                         className={[
                           'grid grid-cols-[2.5rem_2.25rem_minmax(0,1fr)_minmax(0,11rem)] items-center gap-3 rounded-xl px-4 py-3',
-                          isFirst
-                            ? 'bg-gradient-to-br from-amber-50 via-yellow-50 to-amber-100 ring-1 ring-amber-200/90 shadow-sm'
-                            : 'bg-gray-100/80 ring-1 ring-gray-200/60',
+                          isFirst ? exportTheme.rowFirst : exportTheme.rowBg,
                         ].join(' ')}
                       >
-                        <span className="text-base font-semibold text-gray-500 tabular-nums">{rank}</span>
+                        <span
+                          className={['text-base font-semibold tabular-nums', exportTheme.rowMuted].join(' ')}
+                        >
+                          {rank}
+                        </span>
                         <span className="text-lg leading-none">{medal(rank)}</span>
-                        <span className="min-w-0 truncate text-base font-medium text-gray-900">{item?.name || '—'}</span>
-                        <span className="min-w-0 break-words text-right text-sm font-semibold text-gray-800 tabular-nums">
+                        <span
+                          className={['min-w-0 truncate text-base font-medium', exportTheme.rowName].join(' ')}
+                        >
+                          {item?.name || '—'}
+                        </span>
+                        <span
+                          className={[
+                            'min-w-0 break-words text-right text-sm font-semibold tabular-nums',
+                            exportTheme.rowValue,
+                          ].join(' ')}
+                        >
                           {valueText}
                         </span>
                       </div>
@@ -331,7 +444,13 @@ export function RankingDetailPage() {
                   })}
                 </div>
 
-                <div className="mt-8 flex w-full shrink-0 justify-between border-t border-gray-100 pt-4 text-xs text-gray-500">
+                <div
+                  className={[
+                    'mt-8 flex w-full shrink-0 justify-between border-t pt-4 text-xs',
+                    exportTheme.footerBorder,
+                    exportTheme.subtext,
+                  ].join(' ')}
+                >
                   <span>Created with LifeRank</span>
                   <span>liferank.app</span>
                 </div>
