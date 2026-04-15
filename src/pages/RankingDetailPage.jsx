@@ -35,6 +35,9 @@ function isImageClipboardWriteSupported() {
   return true
 }
 
+const SHARE_ACTION_BUTTON_CLASS =
+  'inline-flex h-10 shrink-0 items-center justify-center gap-1.5 rounded-xl border border-gray-200 bg-white px-5 text-sm font-medium text-[#1D1D1F] shadow-sm transition hover:bg-gray-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0071E3] focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:bg-white'
+
 const EXPORT_THEME_IDS = ['default', 'dark', 'blue', 'purple', 'minimal']
 
 const EXPORT_THEME_STYLES = {
@@ -480,22 +483,22 @@ export function RankingDetailPage() {
               }}
               disabled={isExporting || !canCopyImageToClipboard}
               title={canCopyImageToClipboard ? undefined : 'Not supported in this browser'}
-              className="rounded-xl bg-[#0071E3] px-5 py-2.5 text-sm font-medium text-white shadow-sm transition hover:brightness-110 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0071E3] focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
+              aria-label="Copy image to clipboard"
+              className={SHARE_ACTION_BUTTON_CLASS}
             >
-              Copy to clipboard
+              <span aria-hidden>📋</span>
+              Copy
             </button>
             <button
               type="button"
               onClick={handleExportImage}
               disabled={isExporting}
-              className="rounded-xl bg-white px-5 py-2.5 text-sm font-medium text-[#1D1D1F] ring-1 ring-black/10 shadow-sm transition hover:bg-black/[0.04] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0071E3] focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
+              aria-label="Download ranking image"
+              className={SHARE_ACTION_BUTTON_CLASS}
             >
-              {isExporting ? 'Preparing…' : 'Download image'}
+              <span aria-hidden>⬇️</span>
+              {isExporting ? 'Preparing…' : 'Download'}
             </button>
-          </div>
-
-          <div className="mt-8 flex flex-col items-center border-t border-gray-100 pt-6">
-            <p className="text-center text-sm text-gray-500">or share an interactive link</p>
             <button
               type="button"
               onClick={async () => {
@@ -508,8 +511,9 @@ export function RankingDetailPage() {
                   window.setTimeout(() => setShareFeedback(null), 4000)
                 }
               }}
-              className="mt-3 rounded-xl border border-gray-200 bg-white px-5 py-2.5 text-sm font-medium text-[#1D1D1F] transition hover:bg-gray-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0071E3] focus-visible:ring-offset-2"
+              className={SHARE_ACTION_BUTTON_CLASS}
             >
+              <span aria-hidden>🔗</span>
               Copy link
             </button>
           </div>
