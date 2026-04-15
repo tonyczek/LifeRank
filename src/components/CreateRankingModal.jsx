@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { RankingCustomizationControls } from './RankingCustomizationControls'
 import { CategorySelector } from './CategorySelector'
 import { buildCategoryOptions } from '../utils/categories'
+import { rankingTypeHint, rankingTypeShortLabel } from '../utils/rankingTypeUi'
 
 export function CreateRankingModal({ open, onClose, onCreate, rankings = [] }) {
   const [animateIn, setAnimateIn] = useState(false)
@@ -21,7 +22,7 @@ export function CreateRankingModal({ open, onClose, onCreate, rankings = [] }) {
     return {
       name: name.trim(),
       type,
-      metricLabel: type === 'value' ? metricLabel.trim() : type === 'drag' ? 'Manual order' : 'Rating (1–10)',
+      metricLabel: type === 'value' ? metricLabel.trim() : type === 'drag' ? 'Manual order' : 'Score (1–10)',
       category: category === 'Custom' ? customCategory.trim() || 'Other' : category,
       emoji: emoji.trim() || '🏆',
       color,
@@ -54,7 +55,7 @@ export function CreateRankingModal({ open, onClose, onCreate, rankings = [] }) {
       return
     }
     if (payload.type === 'value' && !payload.metricLabel) {
-      setError('Metric label is required for value-based rankings.')
+      setError('Metric label is required for Number rankings.')
       return
     }
     onCreate?.(payload)
@@ -124,8 +125,8 @@ export function CreateRankingModal({ open, onClose, onCreate, rankings = [] }) {
                     : 'border-black/10 bg-white text-[#6E6E73] hover:bg-black/5',
                 ].join(' ')}
               >
-                <div className="font-medium">Rating 1–10</div>
-                <div className="mt-0.5 text-xs">Best for subjective scores</div>
+                <div className="font-medium">{rankingTypeShortLabel('rating')}</div>
+                <div className="mt-0.5 text-xs">{rankingTypeHint('rating')}</div>
               </button>
 
               <button
@@ -138,8 +139,8 @@ export function CreateRankingModal({ open, onClose, onCreate, rankings = [] }) {
                     : 'border-black/10 bg-white text-[#6E6E73] hover:bg-black/5',
                 ].join(' ')}
               >
-                <div className="font-medium">Value-based</div>
-                <div className="mt-0.5 text-xs">Best for measurable metrics</div>
+                <div className="font-medium">{rankingTypeShortLabel('value')}</div>
+                <div className="mt-0.5 text-xs">{rankingTypeHint('value')}</div>
               </button>
 
               <button
@@ -152,8 +153,8 @@ export function CreateRankingModal({ open, onClose, onCreate, rankings = [] }) {
                     : 'border-black/10 bg-white text-[#6E6E73] hover:bg-black/5',
                 ].join(' ')}
               >
-                <div className="font-medium">Drag (manual order)</div>
-                <div className="mt-0.5 text-xs">Manual ranking (drag &amp; drop)</div>
+                <div className="font-medium">{rankingTypeShortLabel('drag')}</div>
+                <div className="mt-0.5 text-xs">{rankingTypeHint('drag')}</div>
               </button>
             </div>
           </div>

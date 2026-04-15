@@ -10,11 +10,12 @@ import { useRankings } from '../hooks/useRankings'
 import { useProfile } from '../hooks/useProfile'
 import { buildCategoryOptions } from '../utils/categories'
 import ExportModal from '../components/ExportModal'
+import { rankingTypeShortLabel } from '../utils/rankingTypeUi'
 
 function TypeBadge({ type }) {
   return (
     <span className="inline-flex items-center rounded-full bg-[#F5F5F7] px-2.5 py-1 text-xs font-medium text-[#1D1D1F] ring-1 ring-black/5">
-      {type === 'value' ? 'Value' : type === 'drag' ? 'Drag' : 'Rating'}
+      {rankingTypeShortLabel(type)}
     </span>
   )
 }

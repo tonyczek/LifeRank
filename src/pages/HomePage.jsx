@@ -164,7 +164,7 @@ export function HomePage() {
             name: idea.name,
             type: idea.type,
             category: idea.category,
-            metricLabel: idea.type === 'value' ? 'Value' : idea.type === 'drag' ? 'Manual order' : 'Rating (1–10)',
+            metricLabel: idea.type === 'value' ? 'Number' : idea.type === 'drag' ? 'Manual order' : 'Score (1–10)',
           })
           setIsIdeasOpen(false)
         }}

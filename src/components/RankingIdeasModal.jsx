@@ -1,3 +1,5 @@
+import { rankingTypeShortLabel } from '../utils/rankingTypeUi'
+
 const RANKING_IDEAS = {
   Sports: [
     { name: 'Best football matches seen', type: 'drag', category: 'Sports' },
@@ -39,12 +41,16 @@ const RANKING_IDEAS = {
 function TypeBadge({ type }) {
   const config =
     type === 'rating'
-      ? { label: 'Rating', classes: 'bg-blue-100 text-blue-700' }
+      ? { classes: 'bg-blue-100 text-blue-700' }
       : type === 'value'
-        ? { label: 'Value', classes: 'bg-purple-100 text-purple-700' }
-        : { label: 'Drag', classes: 'bg-green-100 text-green-700' }
+        ? { classes: 'bg-purple-100 text-purple-700' }
+        : { classes: 'bg-green-100 text-green-700' }
 
-  return <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${config.classes}`}>{config.label}</span>
+  return (
+    <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${config.classes}`}>
+      {rankingTypeShortLabel(type)}
+    </span>
+  )
 }
 
 export function RankingIdeasModal({ open, onClose, onCreateFromIdea }) {

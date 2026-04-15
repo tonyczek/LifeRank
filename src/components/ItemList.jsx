@@ -8,6 +8,7 @@ import {
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable'
 import { EmptyState } from './EmptyState'
+import { rankingValueFieldLabel } from '../utils/rankingTypeUi'
 
 function SortableItemRow({ id, children }) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id })
@@ -71,7 +72,7 @@ export function ItemList({ ranking, onDeleteItem, onUpdateItem, onReorderItems }
   }
 
   const isRating = ranking.type === 'rating'
-  const valueLabel = isRating ? 'Rating (1-10)' : ranking.metricLabel || 'Value'
+  const valueLabel = rankingValueFieldLabel(ranking)
 
   function startEdit(item) {
     setEditingId(item.id)
@@ -91,12 +92,16 @@ export function ItemList({ ranking, onDeleteItem, onUpdateItem, onReorderItems }
       return
     }
     if (!isDrag) {
-      if (draft.value === '' || Number.isNaN(numericValue)) {
-        setEditError(`${valueLabel} must be a number.`)
+      if (draft.value === '') {
+        setEditError(isRating ? 'Score is required.' : 'Number is required.')
+        return
+      }
+      if (Number.isNaN(numericValue)) {
+        setEditError('Must be a number.')
         return
       }
       if (isRating && (numericValue < 1 || numericValue > 10)) {
-        setEditError('Rating must be between 1 and 10.')
+        setEditError('Score must be between 1 and 10.')
         return
       }
     }

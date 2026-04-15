@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react'
+import { rankingValueFieldLabel } from '../utils/rankingTypeUi'
 
 export function AddItemForm({ ranking, onAddItem }) {
   const [name, setName] = useState('')
@@ -8,9 +9,7 @@ export function AddItemForm({ ranking, onAddItem }) {
 
   const isRating = ranking.type === 'rating'
   const isDrag = ranking.type === 'drag'
-  const valueLabel = useMemo(() => {
-    return isRating ? 'Rating (1-10)' : ranking.metricLabel || 'Value'
-  }, [isRating, ranking.metricLabel])
+  const valueLabel = useMemo(() => rankingValueFieldLabel(ranking), [ranking])
 
   function validate() {
     const nextErrors = {}
@@ -20,11 +19,11 @@ export function AddItemForm({ ranking, onAddItem }) {
     if (!trimmedName) nextErrors.name = 'Name is required.'
     if (!isDrag) {
       if (value === '') {
-        nextErrors.value = 'Value is required.'
+        nextErrors.value = isRating ? 'Score is required.' : 'Number is required.'
       } else if (Number.isNaN(numeric)) {
-        nextErrors.value = 'Value must be a number.'
+        nextErrors.value = 'Must be a number.'
       } else if (isRating && (numeric < 1 || numeric > 10)) {
-        nextErrors.value = 'Rating must be between 1 and 10.'
+        nextErrors.value = 'Score must be between 1 and 10.'
       }
     }
 
@@ -74,7 +73,7 @@ export function AddItemForm({ ranking, onAddItem }) {
               value={value}
               onChange={(e) => setValue(e.target.value)}
               className="mt-2 w-full rounded-xl border border-black/10 bg-white px-3 py-2 text-sm outline-none transition focus:border-[#0071E3] focus:ring-2 focus:ring-[#0071E3]/20"
-              placeholder={isRating ? '1 to 10' : ranking.metricLabel || 'Enter value'}
+              placeholder={isRating ? '1 to 10' : ranking.metricLabel || 'Enter number'}
             />
             {errors.value ? <p className="mt-1 text-xs text-red-600">{errors.value}</p> : null}
           </div>
