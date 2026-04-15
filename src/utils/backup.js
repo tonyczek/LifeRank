@@ -28,6 +28,7 @@ export function normalizeImportedRankings(rankings) {
   return (rankings ?? []).map((r) => ({
     ...r,
     id: String(r.id),
+    isPublic: r.isPublic === false ? false : true,
     category: String(r?.category ?? 'Other').trim() || 'Other',
     items: Array.isArray(r.items) ? r.items : [],
   }))

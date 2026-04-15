@@ -12,13 +12,22 @@ function newId() {
   return `${Date.now()}_${Math.random().toString(16).slice(2)}`
 }
 
+function ensureRankingIdsAndVisibility(ranking) {
+  const id =
+    ranking?.id != null && String(ranking.id).trim() !== '' ? String(ranking.id) : newId()
+  const isPublic = ranking?.isPublic === false ? false : true
+  return {
+    ...ranking,
+    id,
+    isPublic,
+    category: String(ranking?.category ?? 'Other').trim() || 'Other',
+  }
+}
+
 export function useRankings() {
   const initial = useMemo(() => loadData(), [])
   const [rankings, setRankings] = useState(() =>
-    (initial.rankings ?? []).map((ranking) => ({
-      ...ranking,
-      category: String(ranking?.category ?? 'Other').trim() || 'Other',
-    })),
+    (initial.rankings ?? []).map((ranking) => ensureRankingIdsAndVisibility(ranking)),
   )
 
   useEffect(() => {
@@ -34,6 +43,7 @@ export function useRankings() {
       emoji: String(emoji ?? '🏆').trim() || '🏆',
       color: String(color ?? 'default').trim() || 'default',
       category: String(category ?? 'Other').trim() || 'Other',
+      isPublic: true,
       createdAt: nowIso(),
       items: [],
     }
@@ -167,11 +177,13 @@ export function useRankings() {
   function replaceRankings(nextRankings) {
     const list = Array.isArray(nextRankings) ? nextRankings : []
     setRankings(
-      list.map((ranking) => ({
-        ...ranking,
-        category: String(ranking?.category ?? 'Other').trim() || 'Other',
-        items: Array.isArray(ranking?.items) ? ranking.items : [],
-      })),
+      list.map((ranking) => {
+        const base = ensureRankingIdsAndVisibility(ranking)
+        return {
+          ...base,
+          items: Array.isArray(ranking?.items) ? ranking.items : [],
+        }
+      }),
     )
   }
 

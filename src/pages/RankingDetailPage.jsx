@@ -134,6 +134,11 @@ export function RankingDetailPage() {
       .slice(0, exportCount)
   }, [ranking, exportCount])
 
+  const publicShareUrl = useMemo(() => {
+    if (typeof window === 'undefined') return `/r/${id ?? ''}`
+    return `${window.location.origin}/r/${id ?? ''}`
+  }, [id])
+
   if (!ranking) {
     return (
       <div className="min-h-screen bg-[#F5F5F7] text-[#1D1D1F]">
@@ -488,6 +493,27 @@ export function RankingDetailPage() {
               {isExporting ? 'Preparing…' : 'Download image'}
             </button>
           </div>
+
+          <div className="mt-8 flex flex-col items-center border-t border-gray-100 pt-6">
+            <p className="text-center text-sm text-gray-500">or share an interactive link</p>
+            <button
+              type="button"
+              onClick={async () => {
+                try {
+                  await navigator.clipboard.writeText(publicShareUrl)
+                  setShareFeedback({ variant: 'success', message: 'Link copied' })
+                  window.setTimeout(() => setShareFeedback(null), 2800)
+                } catch {
+                  setShareFeedback({ variant: 'error', message: 'Could not copy link' })
+                  window.setTimeout(() => setShareFeedback(null), 4000)
+                }
+              }}
+              className="mt-3 rounded-xl border border-gray-200 bg-white px-5 py-2.5 text-sm font-medium text-[#1D1D1F] transition hover:bg-gray-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0071E3] focus-visible:ring-offset-2"
+            >
+              Copy link
+            </button>
+          </div>
+
           {shareFeedback ? (
             <p
               className={[
