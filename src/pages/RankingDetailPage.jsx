@@ -122,11 +122,15 @@ export function RankingDetailPage() {
     setIsExporting(true)
     try {
       const dataUrl = await toPng(exportRef.current, { cacheBust: true, pixelRatio: 2 })
+      const response = await fetch(dataUrl)
+      const blob = await response.blob()
+      const url = URL.createObjectURL(blob)
       const safeName = (ranking.name || 'ranking').replace(/[<>:"/\\|?*]+/g, '_').trim() || 'ranking'
       const link = document.createElement('a')
       link.download = `${safeName}.png`
-      link.href = dataUrl
+      link.href = url
       link.click()
+      window.setTimeout(() => URL.revokeObjectURL(url), 250)
     } finally {
       setIsExporting(false)
     }
