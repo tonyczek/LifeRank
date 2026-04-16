@@ -1,52 +1,68 @@
-/** Conservative limit for share URLs (query length varies by browser). */
-export const SHARE_URL_MAX_LENGTH = 2000
+import { compressToEncodedURIComponent, decompressFromEncodedURIComponent } from 'lz-string'
+import { sortRankingItems } from './rankingDisplay'
 
-function serializableRanking(ranking) {
+/** Conservative limit for share URLs (query length varies by browser). */
+export const SHARE_URL_MAX_LENGTH = 8000
+
+/** Omit huge data-URL avatars so links stay shareable. */
+function slimAuthorForShare(author) {
+  const name = typeof author?.name === 'string' ? author.name : ''
+  let avatar = typeof author?.avatar === 'string' ? author.avatar : ''
+  if (avatar.startsWith('data:') || avatar.length > 400) {
+    avatar = ''
+  }
+  return { name, avatar }
+}
+
+/**
+ * Minimal ranking for URL payload: display + import fields only (no ids, notes, timestamps).
+ */
+function minimalRankingForShare(ranking) {
   if (!ranking || typeof ranking !== 'object') return null
+  if (!['rating', 'value', 'drag'].includes(ranking.type)) return null
+
+  const sorted = sortRankingItems(ranking)
+  const type = ranking.type
+  const items = sorted.map((it, index) => {
+    const name = String(it?.name ?? '').trim()
+    const value = Number(it?.value ?? 0)
+    if (type === 'drag') {
+      return { name, value, order: index }
+    }
+    return { name, value }
+  })
+
   return {
-    id: ranking.id,
-    name: ranking.name,
-    type: ranking.type,
-    metricLabel: ranking.metricLabel,
-    emoji: ranking.emoji,
-    color: ranking.color,
-    category: ranking.category,
-    isPublic: ranking.isPublic,
-    createdAt: ranking.createdAt,
-    items: Array.isArray(ranking.items)
-      ? ranking.items.map((it) => ({
-          id: it.id,
-          name: it.name,
-          value: it.value,
-          notes: it.notes,
-          order: it.order,
-          createdAt: it.createdAt,
-        }))
-      : [],
+    name: String(ranking.name ?? '').trim(),
+    type,
+    metricLabel: String(ranking.metricLabel ?? '').trim(),
+    emoji: String(ranking.emoji ?? '🏆').trim() || '🏆',
+    category: String(ranking.category ?? 'Other').trim() || 'Other',
+    items,
   }
 }
 
 /**
  * Build /share?data=… URL (client-side only, no backend).
- * Payload: { ranking, author } so recipients see author without local profile.
+ * Payload: { ranking, author } — ranking is stripped + lz-compressed.
  */
 export function buildEncodedShareUrl(ranking, author) {
-  const rankingPart = serializableRanking(ranking)
+  const rankingPart = minimalRankingForShare(ranking)
   if (!rankingPart) {
     return { ok: false, error: 'Could not encode ranking' }
   }
   const payload = {
     ranking: rankingPart,
-    author: {
-      name: typeof author?.name === 'string' ? author.name : '',
-      avatar: typeof author?.avatar === 'string' ? author.avatar : '',
-    },
+    author: slimAuthorForShare(author),
   }
   const json = JSON.stringify(payload)
   let encoded
   try {
-    encoded = btoa(encodeURIComponent(json))
+    encoded = compressToEncodedURIComponent(json)
   } catch {
+    return { ok: false, error: 'Could not encode ranking' }
+  }
+  if (!encoded) {
     return { ok: false, error: 'Could not encode ranking' }
   }
   const origin = typeof window !== 'undefined' ? window.location.origin : ''
@@ -62,7 +78,53 @@ function isValidRankingSnapshot(ranking) {
   if (typeof ranking.name !== 'string' || !ranking.name.trim()) return false
   if (!['rating', 'value', 'drag'].includes(ranking.type)) return false
   if (!Array.isArray(ranking.items)) return false
+  for (const it of ranking.items) {
+    if (!it || typeof it !== 'object') return false
+    if (typeof it.name !== 'string') return false
+  }
   return true
+}
+
+/** Normalize decoded ranking (minimal or legacy full) for UI + import. */
+function normalizeDecodedRanking(ranking) {
+  const items = (ranking.items ?? []).map((it, idx) => ({
+    id: it.id != null && String(it.id).trim() !== '' ? String(it.id) : `share-${idx}`,
+    name: String(it?.name ?? '').trim(),
+    value: Number(it?.value ?? 0),
+    notes: typeof it?.notes === 'string' ? it.notes : '',
+    order:
+      ranking.type === 'drag'
+        ? Number.isFinite(Number(it?.order))
+          ? Number(it.order)
+          : idx
+        : it.order,
+  }))
+  return {
+    name: ranking.name,
+    type: ranking.type,
+    metricLabel: ranking.metricLabel ?? '',
+    emoji: ranking.emoji ?? '🏆',
+    color: ranking.color ?? 'default',
+    category: ranking.category ?? 'Other',
+    isPublic: ranking.isPublic !== false,
+    items,
+  }
+}
+
+function parseJsonPayload(jsonString) {
+  const data = JSON.parse(jsonString)
+  const ranking = data?.ranking != null ? data.ranking : data
+  const author =
+    data?.author && typeof data.author === 'object'
+      ? {
+          name: typeof data.author.name === 'string' ? data.author.name : '',
+          avatar: typeof data.author.avatar === 'string' ? data.author.avatar : '',
+        }
+      : { name: '', avatar: '' }
+  if (!isValidRankingSnapshot(ranking)) {
+    return { ok: false, reason: 'invalid' }
+  }
+  return { ok: true, ranking: normalizeDecodedRanking(ranking), author }
 }
 
 /**
@@ -73,21 +135,28 @@ export function decodeSharePayload(encoded) {
   if (encoded == null || String(encoded).trim() === '') {
     return { ok: false, reason: 'missing' }
   }
+  const raw = String(encoded)
+
+  let jsonString = null
   try {
-    const json = decodeURIComponent(atob(String(encoded)))
-    const data = JSON.parse(json)
-    const ranking = data?.ranking != null ? data.ranking : data
-    const author =
-      data?.author && typeof data.author === 'object'
-        ? {
-            name: typeof data.author.name === 'string' ? data.author.name : '',
-            avatar: typeof data.author.avatar === 'string' ? data.author.avatar : '',
-          }
-        : { name: '', avatar: '' }
-    if (!isValidRankingSnapshot(ranking)) {
-      return { ok: false, reason: 'invalid' }
+    const decompressed = decompressFromEncodedURIComponent(raw)
+    if (decompressed != null && decompressed !== '') {
+      jsonString = decompressed
     }
-    return { ok: true, ranking, author }
+  } catch {
+    jsonString = null
+  }
+
+  if (jsonString == null || jsonString === '') {
+    try {
+      jsonString = decodeURIComponent(atob(raw))
+    } catch {
+      return { ok: false, reason: 'broken' }
+    }
+  }
+
+  try {
+    return parseJsonPayload(jsonString)
   } catch {
     return { ok: false, reason: 'broken' }
   }
