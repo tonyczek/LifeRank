@@ -24,3 +24,13 @@ export function rankingValueFieldLabel(ranking) {
   if (ranking.type === 'value') return ranking.metricLabel?.trim() || 'Number'
   return ''
 }
+
+/** Compact value text for list/leaderboard rows (headers use metricLabel unchanged). */
+export function rankingItemRowValueText({ type, value, metricLabel }) {
+  if (type === 'rating') {
+    const n = Number(value)
+    const core = Number.isFinite(n) ? String(n) : String(value ?? '')
+    return `${core}/10`
+  }
+  return `${value ?? ''} ${metricLabel ?? ''}`.trim()
+}

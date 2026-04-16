@@ -1,5 +1,6 @@
 import { useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { rankingItemRowValueText } from '../utils/rankingTypeUi'
 
 /** Card corner badge only — one word, UI display. */
 function typeCornerLabel(type) {
@@ -89,8 +90,16 @@ export function RankingCard({ ranking, onDelete }) {
                 <span className="text-sm">{medal(idx + 1)}</span>
                 <span className="truncate text-sm text-[#1D1D1F] dark:text-gray-100">{item?.name || '—'}</span>
               </div>
-              <span className="ml-3 text-sm font-medium text-[#1D1D1F] dark:text-gray-100">
-                {item ? (ranking.type === 'drag' ? `#${idx + 1}` : Number(item.value ?? 0)) : '—'}
+              <span className="ml-3 text-right text-sm font-semibold tabular-nums text-[#1D1D1F] dark:text-gray-100">
+                {item
+                  ? ranking.type === 'drag'
+                    ? `#${idx + 1}`
+                    : rankingItemRowValueText({
+                        type: ranking.type,
+                        value: item.value,
+                        metricLabel: ranking.metricLabel,
+                      })
+                  : '—'}
               </span>
             </div>
           )

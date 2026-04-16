@@ -1,4 +1,5 @@
 import { useMemo } from 'react'
+import { rankingItemRowValueText } from '../utils/rankingTypeUi'
 
 function medal(rank) {
   if (rank === 1) return '🥇'
@@ -43,11 +44,15 @@ export function Leaderboard({ items = [], metricLabel = '', rankingType = 'ratin
               <span className="text-sm font-semibold text-[#6E6E73] dark:text-gray-400">{rank}</span>
               <span className="text-base">{medal(rank)}</span>
               <span className="truncate text-sm text-[#1D1D1F] dark:text-gray-100">{item?.name || '—'}</span>
-              <span className="text-sm font-medium text-[#1D1D1F] dark:text-gray-100">
+              <span className="text-right text-sm font-semibold tabular-nums text-[#1D1D1F] dark:text-gray-100">
                 {item
                   ? rankingType === 'drag'
                     ? `#${rank}`
-                    : `${item.value} ${metricLabel}`.trim()
+                    : rankingItemRowValueText({
+                        type: rankingType,
+                        value: item.value,
+                        metricLabel,
+                      })
                   : '—'}
               </span>
             </div>

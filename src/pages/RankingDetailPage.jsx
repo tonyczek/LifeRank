@@ -11,7 +11,7 @@ import { useProfile } from '../hooks/useProfile'
 import { buildCategoryOptions } from '../utils/categories'
 import { buildEncodedShareUrl } from '../utils/shareLink'
 import ExportModal from '../components/ExportModal'
-import { rankingTypeShortLabel } from '../utils/rankingTypeUi'
+import { rankingItemRowValueText, rankingTypeShortLabel } from '../utils/rankingTypeUi'
 
 function TypeBadge({ type }) {
   return (
@@ -410,7 +410,11 @@ export function RankingDetailPage() {
                     const isFirst = rank === 1 && Boolean(item)
                     const valueText =
                       item && ranking.type !== 'drag'
-                        ? `${item.value} ${ranking.metricLabel || ''}`.trim()
+                        ? rankingItemRowValueText({
+                            type: ranking.type,
+                            value: item.value,
+                            metricLabel: ranking.metricLabel,
+                          })
                         : item
                           ? ''
                           : '—'

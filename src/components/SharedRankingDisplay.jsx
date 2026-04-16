@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 import { sortRankingItems } from '../utils/rankingDisplay'
-import { rankingTypeShortLabel } from '../utils/rankingTypeUi'
+import { rankingItemRowValueText, rankingTypeShortLabel } from '../utils/rankingTypeUi'
 
 function TypeBadge({ type }) {
   return (
@@ -78,8 +78,14 @@ export function SharedRankingDisplay({ ranking, author }) {
                 <span className="text-sm font-semibold text-[#6E6E73] dark:text-gray-400">{rank}</span>
                 <span className="text-base">{medal(rank)}</span>
                 <span className="truncate text-sm text-[#1D1D1F] dark:text-gray-100">{item.name || '—'}</span>
-                <span className="text-sm font-medium text-[#1D1D1F] dark:text-gray-100">
-                  {ranking.type === 'drag' ? `#${rank}` : `${item.value} ${metricLabel}`.trim()}
+                <span className="text-right text-sm font-semibold tabular-nums text-[#1D1D1F] dark:text-gray-100">
+                  {ranking.type === 'drag'
+                    ? `#${rank}`
+                    : rankingItemRowValueText({
+                        type: ranking.type,
+                        value: item.value,
+                        metricLabel,
+                      })}
                 </span>
               </div>
             )

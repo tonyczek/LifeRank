@@ -8,7 +8,7 @@ import {
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable'
 import { EmptyState } from './EmptyState'
-import { rankingValueFieldLabel } from '../utils/rankingTypeUi'
+import { rankingItemRowValueText, rankingValueFieldLabel } from '../utils/rankingTypeUi'
 
 function SortableItemRow({ id, children }) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id })
@@ -173,7 +173,13 @@ export function ItemList({ ranking, onDeleteItem, onUpdateItem, onReorderItems }
                           <>
                             <p className="truncate text-sm font-medium text-[#1D1D1F] dark:text-gray-100">{item.name}</p>
                             {!isDrag ? (
-                              <p className="mt-1 text-xs text-[#6E6E73] dark:text-gray-400">{`${item.value} ${valueLabel}`.trim()}</p>
+                              <p className="mt-1 text-xs font-semibold tabular-nums text-[#6E6E73] dark:text-gray-400">
+                                {rankingItemRowValueText({
+                                  type: ranking.type,
+                                  value: item.value,
+                                  metricLabel: ranking.metricLabel,
+                                })}
+                              </p>
                             ) : null}
                             {item.notes ? (
                               <p className="mt-2 text-xs leading-relaxed text-[#6E6E73] dark:text-gray-400">{item.notes}</p>
