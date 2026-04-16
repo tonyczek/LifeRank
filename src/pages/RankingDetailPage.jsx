@@ -9,6 +9,7 @@ import { RankingCustomizationControls } from '../components/RankingCustomization
 import { useRankings } from '../hooks/useRankings'
 import { useProfile } from '../hooks/useProfile'
 import { buildCategoryOptions } from '../utils/categories'
+import { buildEncodedShareUrl } from '../utils/shareLink'
 import ExportModal from '../components/ExportModal'
 import { rankingTypeShortLabel } from '../utils/rankingTypeUi'
 
@@ -136,11 +137,6 @@ export function RankingDetailPage() {
       .map((entry) => entry.item)
       .slice(0, exportCount)
   }, [ranking, exportCount])
-
-  const publicShareUrl = useMemo(() => {
-    if (typeof window === 'undefined') return `/r/${id ?? ''}`
-    return `${window.location.origin}/r/${id ?? ''}`
-  }, [id])
 
   if (!ranking) {
     return (
@@ -502,8 +498,14 @@ export function RankingDetailPage() {
             <button
               type="button"
               onClick={async () => {
+                const built = buildEncodedShareUrl(ranking, profile)
+                if (!built.ok) {
+                  setShareFeedback({ variant: 'error', message: built.error })
+                  window.setTimeout(() => setShareFeedback(null), 4000)
+                  return
+                }
                 try {
-                  await navigator.clipboard.writeText(publicShareUrl)
+                  await navigator.clipboard.writeText(built.url)
                   setShareFeedback({ variant: 'success', message: 'Link copied' })
                   window.setTimeout(() => setShareFeedback(null), 2800)
                 } catch {
