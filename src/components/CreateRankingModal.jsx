@@ -71,13 +71,13 @@ export function CreateRankingModal({ open, onClose, onCreate, rankings = [] }) {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/20 px-4 py-8 backdrop-blur-sm"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/20 px-4 py-8 backdrop-blur-sm transition-colors duration-200 dark:bg-black/50"
       onClick={() => onClose?.()}
       role="presentation"
     >
       <div
         className={[
-          'relative w-full max-w-lg max-h-[80vh] overflow-y-auto rounded-2xl bg-white p-6 shadow-[0_24px_80px_rgba(0,0,0,0.18)] ring-1 ring-black/5',
+          'relative w-full max-w-lg max-h-[80vh] overflow-y-auto rounded-2xl bg-white p-6 shadow-[0_24px_80px_rgba(0,0,0,0.18)] ring-1 ring-black/5 transition-colors duration-200 dark:bg-gray-800 dark:ring-white/10',
           'transition duration-200 ease-out',
           animateIn ? 'opacity-100 scale-100' : 'opacity-0 scale-95',
         ].join(' ')}
@@ -87,13 +87,13 @@ export function CreateRankingModal({ open, onClose, onCreate, rankings = [] }) {
       >
         <div className="flex items-start justify-between gap-4">
           <div>
-            <h2 className="text-lg font-semibold tracking-tight text-[#1D1D1F]">Create ranking</h2>
-            <p className="mt-1 text-sm text-[#6E6E73]">Choose a type and start adding items.</p>
+            <h2 className="text-lg font-semibold tracking-tight text-[#1D1D1F] dark:text-gray-100">Create ranking</h2>
+            <p className="mt-1 text-sm text-[#6E6E73] dark:text-gray-400">Choose a type and start adding items.</p>
           </div>
           <button
             type="button"
             onClick={onClose}
-            className="rounded-lg px-2 py-1 text-sm font-medium text-[#6E6E73] transition hover:bg-black/5 hover:text-[#1D1D1F] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0071E3]"
+            className="rounded-lg px-2 py-1 text-sm font-medium text-[#6E6E73] transition hover:bg-black/5 hover:text-[#1D1D1F] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0071E3] dark:text-gray-400 dark:hover:bg-white/10 dark:hover:text-gray-100"
             aria-label="Close"
           >
             ✕
@@ -102,18 +102,18 @@ export function CreateRankingModal({ open, onClose, onCreate, rankings = [] }) {
 
         <form onSubmit={submit} className="mt-5 space-y-4">
           <div>
-            <label className="text-sm font-medium text-[#1D1D1F]">Name</label>
+            <label className="text-sm font-medium text-[#1D1D1F] dark:text-gray-100">Name</label>
             <input
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="e.g. Favorite coffees"
-              className="mt-2 w-full rounded-xl border border-black/10 bg-white px-3 py-2 text-sm outline-none ring-0 transition focus:border-[#0071E3] focus:ring-2 focus:ring-[#0071E3]/20"
+              className="mt-2 w-full rounded-xl border border-black/10 bg-white px-3 py-2 text-sm text-[#1D1D1F] outline-none ring-0 transition focus:border-[#0071E3] focus:ring-2 focus:ring-[#0071E3]/20 dark:border-white/10 dark:bg-gray-900 dark:text-gray-100"
               autoFocus
             />
           </div>
 
           <div>
-            <label className="text-sm font-medium text-[#1D1D1F]">Type</label>
+            <label className="text-sm font-medium text-[#1D1D1F] dark:text-gray-100">Type</label>
             <div className="mt-2 grid grid-cols-1 gap-2 sm:grid-cols-3 sm:items-stretch">
               <button
                 type="button"

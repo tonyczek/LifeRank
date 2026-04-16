@@ -15,7 +15,7 @@ import { rankingTypeShortLabel } from '../utils/rankingTypeUi'
 
 function TypeBadge({ type }) {
   return (
-    <span className="inline-flex items-center rounded-full bg-[#F5F5F7] px-2.5 py-1 text-xs font-medium text-[#1D1D1F] ring-1 ring-black/5">
+    <span className="inline-flex items-center rounded-full bg-[#F5F5F7] px-2.5 py-1 text-xs font-medium text-[#1D1D1F] ring-1 ring-black/5 transition-colors duration-200 dark:bg-gray-700 dark:text-gray-100 dark:ring-white/10">
       {rankingTypeShortLabel(type)}
     </span>
   )
@@ -37,7 +37,7 @@ function isImageClipboardWriteSupported() {
 }
 
 const SHARE_ACTION_BUTTON_CLASS =
-  'inline-flex h-10 shrink-0 items-center justify-center gap-1.5 rounded-xl border border-gray-200 bg-white px-5 text-sm font-medium text-[#1D1D1F] shadow-sm transition hover:bg-gray-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0071E3] focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:bg-white'
+  'inline-flex h-10 shrink-0 items-center justify-center gap-1.5 rounded-xl border border-gray-200 bg-white px-5 text-sm font-medium text-[#1D1D1F] shadow-sm transition-colors duration-200 hover:bg-gray-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0071E3] focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:bg-white dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100 dark:hover:bg-gray-700 dark:focus-visible:ring-offset-gray-900 dark:disabled:hover:bg-gray-800'
 
 const EXPORT_THEME_IDS = ['default', 'dark', 'blue', 'purple', 'minimal']
 
@@ -140,11 +140,11 @@ export function RankingDetailPage() {
 
   if (!ranking) {
     return (
-      <div className="min-h-screen bg-[#F5F5F7] text-[#1D1D1F]">
+      <div className="min-h-screen bg-[#F5F5F7] text-[#1D1D1F] transition-colors duration-200 dark:bg-gray-950 dark:text-gray-100">
         <div className="mx-auto w-full max-w-4xl px-4 py-8 sm:px-6 lg:px-8">
-          <div className="rounded-2xl bg-white p-8 shadow-[0_10px_30px_rgba(0,0,0,0.06)]">
+          <div className="rounded-2xl bg-white p-8 shadow-[0_10px_30px_rgba(0,0,0,0.06)] transition-colors duration-200 dark:bg-gray-800 dark:ring-1 dark:ring-white/10">
             <h1 className="text-2xl font-semibold tracking-tight">Not found</h1>
-            <p className="mt-2 text-sm text-[#6E6E73]">
+            <p className="mt-2 text-sm text-[#6E6E73] dark:text-gray-400">
               We could not find the requested ranking.
             </p>
             <Link
@@ -223,22 +223,22 @@ export function RankingDetailPage() {
   const exportTheme = EXPORT_THEME_STYLES[theme] ?? EXPORT_THEME_STYLES.default
 
   return (
-    <div className="min-h-screen bg-[#F5F5F7] text-[#1D1D1F]">
+    <div className="min-h-screen bg-[#F5F5F7] text-[#1D1D1F] transition-colors duration-200 dark:bg-gray-950 dark:text-gray-100">
       <div className="mx-auto w-full max-w-4xl px-4 py-8 sm:px-6 lg:px-8">
         <div className="mb-6">
           <Link
             to="/"
-            className="inline-flex items-center rounded-lg px-2 py-1 text-sm text-[#6E6E73] transition hover:bg-black/5 hover:text-[#1D1D1F]"
+            className="inline-flex items-center rounded-lg px-2 py-1 text-sm text-[#6E6E73] transition hover:bg-black/5 hover:text-[#1D1D1F] dark:text-gray-400 dark:hover:bg-white/10 dark:hover:text-gray-100"
           >
             ← All Rankings
           </Link>
           <div className="mt-3 flex items-center gap-3">
             {isEditingName ? (
-              <div className="w-full max-w-2xl space-y-3 rounded-2xl bg-white p-4 shadow-[0_10px_30px_rgba(0,0,0,0.06)]">
+              <div className="w-full max-w-2xl space-y-3 rounded-2xl bg-white p-4 shadow-[0_10px_30px_rgba(0,0,0,0.06)] transition-colors duration-200 dark:bg-gray-800 dark:ring-1 dark:ring-white/10">
                 <input
                   value={draftName}
                   onChange={(e) => setDraftName(e.target.value)}
-                  className="w-full rounded-xl border border-black/10 bg-white px-3 py-2 text-sm font-medium outline-none transition focus:border-[#0071E3] focus:ring-2 focus:ring-[#0071E3]/20"
+                  className="w-full rounded-xl border border-black/10 bg-white px-3 py-2 text-sm font-medium text-[#1D1D1F] outline-none transition focus:border-[#0071E3] focus:ring-2 focus:ring-[#0071E3]/20 dark:border-white/10 dark:bg-gray-900 dark:text-gray-100"
                 />
                 <RankingCustomizationControls
                   emoji={draftEmoji}
@@ -264,7 +264,7 @@ export function RankingDetailPage() {
                   <button
                     type="button"
                     onClick={() => setIsEditingName(false)}
-                    className="rounded-lg px-3 py-1.5 text-xs font-medium text-[#6E6E73] transition hover:bg-black/5 hover:text-[#1D1D1F]"
+                    className="rounded-lg px-3 py-1.5 text-xs font-medium text-[#6E6E73] transition hover:bg-black/5 hover:text-[#1D1D1F] dark:text-gray-400 dark:hover:bg-white/10 dark:hover:text-gray-100"
                   >
                     Cancel
                   </button>
@@ -272,14 +272,14 @@ export function RankingDetailPage() {
               </div>
             ) : (
               <>
-                <h1 className="text-2xl font-semibold tracking-tight">
+                <h1 className="text-2xl font-semibold tracking-tight text-[#1D1D1F] dark:text-gray-100">
                   <span className="mr-1.5">{ranking.emoji || '🏆'}</span>
                   {ranking.name}
                 </h1>
                 <button
                   type="button"
                   onClick={startEditingName}
-                  className="rounded-lg px-3 py-1.5 text-xs font-medium text-[#6E6E73] transition hover:bg-black/5 hover:text-[#1D1D1F]"
+                  className="rounded-lg px-3 py-1.5 text-xs font-medium text-[#6E6E73] transition hover:bg-black/5 hover:text-[#1D1D1F] dark:text-gray-400 dark:hover:bg-white/10 dark:hover:text-gray-100"
                 >
                   Edit
                 </button>
@@ -290,7 +290,7 @@ export function RankingDetailPage() {
               type="button"
               onClick={() => setIsExportOpen(true)}
               disabled={isExporting}
-              className="rounded-lg bg-[#0071E3] px-3 py-1.5 text-xs font-medium text-white shadow-sm transition hover:brightness-110 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0071E3] focus-visible:ring-offset-2 focus-visible:ring-offset-[#F5F5F7] disabled:cursor-not-allowed disabled:opacity-60"
+              className="rounded-lg bg-[#0071E3] px-3 py-1.5 text-xs font-medium text-white shadow-sm transition hover:brightness-110 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0071E3] focus-visible:ring-offset-2 focus-visible:ring-offset-[#F5F5F7] disabled:cursor-not-allowed disabled:opacity-60 dark:focus-visible:ring-offset-gray-950"
             >
               {isExporting ? 'Preparing…' : 'Share'}
             </button>
@@ -321,8 +321,10 @@ export function RankingDetailPage() {
         }}
       >
         <div className="flex max-h-[min(90vh,880px)] flex-col overflow-visible">
-          <h2 className="text-center text-lg font-semibold tracking-tight text-[#1D1D1F]">Share your ranking!</h2>
-          <p className="mt-1 text-center text-sm text-[#6E6E73]">Ready to share 🚀</p>
+          <h2 className="text-center text-lg font-semibold tracking-tight text-[#1D1D1F] dark:text-gray-100">
+            Share your ranking!
+          </h2>
+          <p className="mt-1 text-center text-sm text-[#6E6E73] dark:text-gray-400">Ready to share 🚀</p>
 
           <div className="mt-4 flex items-center justify-center gap-6">
             <div className="flex flex-wrap justify-center gap-2">
@@ -335,7 +337,7 @@ export function RankingDetailPage() {
                     'rounded-xl px-3 py-1.5 text-sm font-medium transition-all duration-150 ease-in-out active:scale-[0.97]',
                     exportCount === n
                       ? 'bg-[#0071E3] text-white hover:brightness-110'
-                      : 'bg-white text-[#6E6E73] ring-1 ring-black/10 hover:bg-black/5 hover:text-[#1D1D1F]',
+                      : 'bg-white text-[#6E6E73] ring-1 ring-black/10 hover:bg-black/5 hover:text-[#1D1D1F] dark:bg-gray-700 dark:text-gray-300 dark:ring-white/10 dark:hover:bg-gray-600 dark:hover:text-gray-100',
                   ].join(' ')}
                 >
                   Top {n}
@@ -458,7 +460,7 @@ export function RankingDetailPage() {
             </div>
           </div>
 
-          <div className="mt-6 flex flex-shrink-0 flex-wrap items-center justify-center gap-3 border-t border-gray-100 pt-5">
+          <div className="mt-6 flex flex-shrink-0 flex-wrap items-center justify-center gap-3 border-t border-gray-100 pt-5 dark:border-gray-700">
             <button
               type="button"
               onClick={async () => {

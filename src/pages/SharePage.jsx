@@ -34,15 +34,18 @@ export function SharePage() {
   }, [ranking?.name])
 
   return (
-    <div className="min-h-screen bg-[#F5F5F7] text-[#1D1D1F]" data-share-page>
+    <div
+      className="min-h-screen bg-[#F5F5F7] text-[#1D1D1F] transition-colors duration-200 dark:bg-gray-950 dark:text-gray-100"
+      data-share-page
+    >
       <div className="mx-auto w-full max-w-[680px] px-4 py-10 sm:px-6">
         {errorMessage ? (
-          <div className="mt-4 rounded-2xl bg-white p-8 text-center shadow-[0_10px_30px_rgba(0,0,0,0.06)] ring-1 ring-black/5">
-            <p className="text-base font-medium text-[#1D1D1F]">{errorMessage}</p>
+          <div className="mt-4 rounded-2xl bg-white p-8 text-center shadow-[0_10px_30px_rgba(0,0,0,0.06)] ring-1 ring-black/5 transition-colors duration-200 dark:bg-gray-800 dark:ring-white/10">
+            <p className="text-base font-medium text-[#1D1D1F] dark:text-gray-100">{errorMessage}</p>
           </div>
         ) : (
           <>
-            <p className="text-center text-xs font-semibold uppercase tracking-wide text-[#6E6E73]">
+            <p className="text-center text-xs font-semibold uppercase tracking-wide text-[#6E6E73] dark:text-gray-400">
               Shared ranking
             </p>
 
@@ -50,7 +53,7 @@ export function SharePage() {
               <SharedRankingDisplay ranking={ranking} author={author} />
             </div>
 
-            <p className="mt-8 text-center text-xs text-[#6E6E73]">Created with LifeRank</p>
+            <p className="mt-8 text-center text-xs text-[#6E6E73] dark:text-gray-500">Created with LifeRank</p>
           </>
         )}
       </div>

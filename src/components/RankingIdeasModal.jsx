@@ -68,20 +68,20 @@ export function RankingIdeasModal({ open, onClose, onCreateFromIdea }) {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/20 px-4 py-8 backdrop-blur-sm"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/20 px-4 py-8 backdrop-blur-sm transition-colors duration-200 dark:bg-black/50"
       onClick={() => onClose?.()}
       role="presentation"
     >
       <div
-        className="relative w-full max-w-3xl max-h-[80vh] overflow-y-auto rounded-2xl bg-white p-6 shadow-[0_24px_80px_rgba(0,0,0,0.18)] ring-1 ring-black/5"
+        className="relative w-full max-w-3xl max-h-[80vh] overflow-y-auto rounded-2xl bg-white p-6 shadow-[0_24px_80px_rgba(0,0,0,0.18)] ring-1 ring-black/5 transition-colors duration-200 dark:bg-gray-800 dark:ring-white/10"
         onClick={(e) => e.stopPropagation()}
         role="dialog"
         aria-modal="true"
       >
         <div className="flex items-start justify-between gap-4">
           <div>
-            <h2 className="text-lg font-semibold tracking-tight text-[#1D1D1F]">Ideas for rankings</h2>
-            <p className="mt-1 text-sm text-[#6E6E73]">Click an idea to create a ranking instantly.</p>
+            <h2 className="text-lg font-semibold tracking-tight text-[#1D1D1F] dark:text-gray-100">Ideas for rankings</h2>
+            <p className="mt-1 text-sm text-[#6E6E73] dark:text-gray-400">Click an idea to create a ranking instantly.</p>
           </div>
           <button
             type="button"
@@ -94,17 +94,20 @@ export function RankingIdeasModal({ open, onClose, onCreateFromIdea }) {
 
         <div className="mt-5 space-y-4">
           {Object.entries(RANKING_IDEAS).map(([category, ideas]) => (
-            <section key={category} className="rounded-xl border border-black/10 p-3">
-              <h3 className="text-sm font-semibold text-[#1D1D1F]">{category}</h3>
+            <section
+              key={category}
+              className="rounded-xl border border-black/10 p-3 transition-colors duration-200 dark:border-white/10 dark:bg-gray-900/50"
+            >
+              <h3 className="text-sm font-semibold text-[#1D1D1F] dark:text-gray-100">{category}</h3>
               <div className="mt-2 space-y-1.5">
                 {ideas.map((idea) => (
                   <button
                     key={idea.name}
                     type="button"
                     onClick={() => onCreateFromIdea?.(idea)}
-                    className="flex w-full items-center justify-between rounded-lg px-3 py-2 text-left transition hover:bg-[#F5F5F7]"
+                    className="flex w-full items-center justify-between rounded-lg px-3 py-2 text-left transition hover:bg-[#F5F5F7] dark:hover:bg-white/10"
                   >
-                    <span className="text-sm text-[#1D1D1F]">{idea.name}</span>
+                    <span className="text-sm text-[#1D1D1F] dark:text-gray-100">{idea.name}</span>
                     <TypeBadge type={idea.type} />
                   </button>
                 ))}

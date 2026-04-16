@@ -42,12 +42,12 @@ export function ProfileModal({ open, onClose }) {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4 py-8 backdrop-blur-sm"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4 py-8 backdrop-blur-sm transition-colors duration-200 dark:bg-black/60"
       onClick={() => onClose?.()}
       role="presentation"
     >
       <div
-        className="relative w-full max-w-md rounded-2xl bg-white p-6 shadow-xl ring-1 ring-black/5"
+        className="relative w-full max-w-md rounded-2xl bg-white p-6 shadow-xl ring-1 ring-black/5 transition-colors duration-200 dark:bg-gray-800 dark:ring-white/10"
         onClick={(e) => e.stopPropagation()}
         role="dialog"
         aria-modal="true"
@@ -61,17 +61,17 @@ export function ProfileModal({ open, onClose }) {
           ✕
         </button>
 
-        <h2 className="text-lg font-semibold tracking-tight text-[#1D1D1F]">Profile</h2>
-        <p className="mt-1 text-sm text-[#6E6E73]">Shown on exported ranking cards.</p>
+        <h2 className="text-lg font-semibold tracking-tight text-[#1D1D1F] dark:text-gray-100">Profile</h2>
+        <p className="mt-1 text-sm text-[#6E6E73] dark:text-gray-400">Shown on exported ranking cards.</p>
 
         <form onSubmit={handleSave} className="mt-5 space-y-4">
           <div>
-            <label className="text-sm font-medium text-[#1D1D1F]">Name</label>
+            <label className="text-sm font-medium text-[#1D1D1F] dark:text-gray-100">Name</label>
             <input
               value={name}
               onChange={(e) => setName(e.target.value.slice(0, 20))}
               maxLength={20}
-              className="mt-2 w-full rounded-xl border border-black/10 bg-white px-3 py-2 text-sm outline-none transition focus:border-[#0071E3] focus:ring-2 focus:ring-[#0071E3]/20"
+              className="mt-2 w-full rounded-xl border border-black/10 bg-white px-3 py-2 text-sm text-[#1D1D1F] outline-none transition focus:border-[#0071E3] focus:ring-2 focus:ring-[#0071E3]/20 dark:border-white/10 dark:bg-gray-900 dark:text-gray-100"
               placeholder="Your name"
             />
             <p className="mt-1 text-xs text-[#6E6E73]">{name.length}/20 characters</p>

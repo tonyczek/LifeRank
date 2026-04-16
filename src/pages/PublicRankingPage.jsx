@@ -33,9 +33,9 @@ export function PublicRankingPage() {
 
   if (!visible) {
     return (
-      <div className="min-h-screen bg-[#F5F5F7] text-[#1D1D1F]">
+      <div className="min-h-screen bg-[#F5F5F7] text-[#1D1D1F] transition-colors duration-200 dark:bg-gray-950 dark:text-gray-100">
         <div className="mx-auto flex min-h-screen w-full max-w-xl flex-col items-center justify-center px-4 py-12">
-          <p className="text-center text-base font-medium text-[#1D1D1F]">Ranking not found</p>
+          <p className="text-center text-base font-medium text-[#1D1D1F] dark:text-gray-100">Ranking not found</p>
           <Link
             to="/"
             className="mt-6 text-sm font-medium text-[#0071E3] underline-offset-2 transition hover:underline"
@@ -51,14 +51,14 @@ export function PublicRankingPage() {
 
   return (
     <div
-      className="min-h-screen bg-[#F5F5F7] text-[#1D1D1F]"
+      className="min-h-screen bg-[#F5F5F7] text-[#1D1D1F] transition-colors duration-200 dark:bg-gray-950 dark:text-gray-100"
       data-public-ranking
       data-ranking-id={ranking.id}
     >
       <div className="mx-auto w-full max-w-[680px] px-4 py-10 sm:px-6">
         <Link
           to="/"
-          className="inline-flex items-center rounded-lg px-2 py-1 text-sm text-[#6E6E73] transition hover:bg-black/5 hover:text-[#1D1D1F]"
+          className="inline-flex items-center rounded-lg px-2 py-1 text-sm text-[#6E6E73] transition hover:bg-black/5 hover:text-[#1D1D1F] dark:text-gray-400 dark:hover:bg-white/10 dark:hover:text-gray-100"
         >
           ← LifeRank
         </Link>
@@ -67,7 +67,7 @@ export function PublicRankingPage() {
           <SharedRankingDisplay ranking={ranking} author={author} />
         </div>
 
-        <p className="mt-8 text-center text-xs text-[#6E6E73]">Created with LifeRank</p>
+        <p className="mt-8 text-center text-xs text-[#6E6E73] dark:text-gray-500">Created with LifeRank</p>
       </div>
     </div>
   )

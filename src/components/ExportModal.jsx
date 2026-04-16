@@ -14,12 +14,12 @@ export default function ExportModal({ isOpen, onClose, children }) {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4 backdrop-blur-sm"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4 backdrop-blur-sm transition-colors duration-200 dark:bg-black/60"
       onClick={onClose}
       role="presentation"
     >
       <div
-        className="relative w-full max-w-4xl overflow-visible rounded-2xl bg-white p-6 shadow-xl"
+        className="relative w-full max-w-4xl overflow-visible rounded-2xl bg-white p-6 shadow-xl transition-colors duration-200 dark:bg-gray-800 dark:ring-1 dark:ring-white/10"
         onClick={(e) => e.stopPropagation()}
         role="dialog"
         aria-modal="true"
@@ -28,7 +28,7 @@ export default function ExportModal({ isOpen, onClose, children }) {
         {/* Close button */}
         <button
           onClick={onClose}
-          className="absolute top-3 right-3 text-gray-400 hover:text-black"
+          className="absolute top-3 right-3 text-gray-400 transition hover:text-black dark:text-gray-500 dark:hover:text-gray-200"
         >
           ✕
         </button>

@@ -61,17 +61,19 @@ export function EmptyState({
   const hasActions = Boolean(onCreate || onIdeas)
 
   return (
-    <div className="rounded-2xl bg-white p-8 shadow-[0_10px_30px_rgba(0,0,0,0.06)] ring-1 ring-black/5">
+    <div className="rounded-2xl bg-white p-8 shadow-[0_10px_30px_rgba(0,0,0,0.06)] ring-1 ring-black/5 transition-colors duration-200 dark:bg-gray-800 dark:ring-white/10">
       <div className="mx-auto flex max-w-lg flex-col items-center px-2 py-6 text-center sm:max-w-2xl sm:px-4 sm:py-8">
         <div className="text-5xl leading-none sm:text-6xl" aria-hidden>
           {emoji}
         </div>
 
-        <h2 className="mt-6 text-xl font-semibold tracking-tight text-[#1D1D1F] sm:text-2xl sm:leading-snug">
+        <h2 className="mt-6 text-xl font-semibold tracking-tight text-[#1D1D1F] dark:text-gray-100 sm:text-2xl sm:leading-snug">
           {title}
         </h2>
 
-        <p className="mt-4 max-w-md text-sm leading-relaxed text-[#6E6E73] sm:text-base">{description}</p>
+        <p className="mt-4 max-w-md text-sm leading-relaxed text-[#6E6E73] dark:text-gray-400 sm:text-base">
+          {description}
+        </p>
 
         {hasActions ? (
           <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
@@ -79,7 +81,7 @@ export function EmptyState({
               <button
                 type="button"
                 onClick={onCreate}
-                className="inline-flex min-h-[2.75rem] min-w-[10rem] items-center justify-center rounded-xl bg-[#0071E3] px-5 py-2.5 text-sm font-medium text-white shadow-sm transition hover:brightness-110 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0071E3] focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+                className="inline-flex min-h-[2.75rem] min-w-[10rem] items-center justify-center rounded-xl bg-[#0071E3] px-5 py-2.5 text-sm font-medium text-white shadow-sm transition hover:brightness-110 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0071E3] focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-800"
               >
                 {buttonLabel}
               </button>
@@ -88,7 +90,7 @@ export function EmptyState({
               <button
                 type="button"
                 onClick={onIdeas}
-                className="inline-flex min-h-[2.75rem] min-w-[10rem] items-center justify-center rounded-xl bg-white px-5 py-2.5 text-sm font-medium text-[#1D1D1F] ring-1 ring-black/10 transition hover:bg-black/5 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0071E3]"
+                className="inline-flex min-h-[2.75rem] min-w-[10rem] items-center justify-center rounded-xl bg-white px-5 py-2.5 text-sm font-medium text-[#1D1D1F] ring-1 ring-black/10 transition hover:bg-black/5 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0071E3] dark:bg-gray-700 dark:text-gray-100 dark:ring-white/10 dark:hover:bg-gray-600"
               >
                 ✨ Get ideas
               </button>
@@ -98,7 +100,9 @@ export function EmptyState({
 
         {onQuickStart ? (
           <div className="mt-10 w-full max-w-2xl">
-            <h3 className="text-left text-sm font-semibold tracking-tight text-[#1D1D1F]">Try one of these</h3>
+            <h3 className="text-left text-sm font-semibold tracking-tight text-[#1D1D1F] dark:text-gray-100">
+              Try one of these
+            </h3>
             <div className="mt-3 flex gap-3 overflow-x-auto pb-1 [-ms-overflow-style:none] [scrollbar-width:none] sm:grid sm:grid-cols-2 sm:overflow-visible sm:pb-0 [&::-webkit-scrollbar]:hidden">
               {QUICK_START_TEMPLATES.map((template) => (
                 <button
@@ -109,7 +113,7 @@ export function EmptyState({
                     delete payload.label
                     onQuickStart(payload)
                   }}
-                  className="min-h-[3.25rem] min-w-[11.5rem] shrink-0 rounded-xl bg-[#F5F5F7] px-3 py-3 text-left text-sm font-medium leading-snug text-[#1D1D1F] ring-1 ring-black/5 transition hover:bg-[#EBEBED] hover:ring-black/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0071E3] sm:min-w-0"
+                  className="min-h-[3.25rem] min-w-[11.5rem] shrink-0 rounded-xl bg-[#F5F5F7] px-3 py-3 text-left text-sm font-medium leading-snug text-[#1D1D1F] ring-1 ring-black/5 transition hover:bg-[#EBEBED] hover:ring-black/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0071E3] dark:bg-gray-700 dark:text-gray-100 dark:ring-white/10 dark:hover:bg-gray-600 sm:min-w-0"
                 >
                   {template.label}
                 </button>

@@ -124,8 +124,8 @@ export function ItemList({ ranking, onDeleteItem, onUpdateItem, onReorderItems }
   }
 
   return (
-    <section className="rounded-2xl bg-white p-5 shadow-[0_10px_30px_rgba(0,0,0,0.06)]">
-      <h2 className="text-lg font-semibold tracking-tight">All Items</h2>
+    <section className="rounded-2xl bg-white p-5 shadow-[0_10px_30px_rgba(0,0,0,0.06)] transition-colors duration-200 dark:bg-gray-800 dark:shadow-[0_10px_30px_rgba(0,0,0,0.35)]">
+      <h2 className="text-lg font-semibold tracking-tight text-[#1D1D1F] dark:text-gray-100">All Items</h2>
       <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={isDrag ? handleDragEnd : undefined}>
         <SortableContext items={sortedItems.map((item) => item.id)} strategy={verticalListSortingStrategy}>
           <div className="mt-4 space-y-2">
@@ -134,19 +134,19 @@ export function ItemList({ ranking, onDeleteItem, onUpdateItem, onReorderItems }
                 {({ attributes, listeners }) => (
                   <div
                     className={[
-                      'rounded-xl bg-[#F5F5F7] px-4 py-3 transition-all duration-300',
+                      'rounded-xl bg-[#F5F5F7] px-4 py-3 transition-all duration-300 dark:bg-gray-700/80',
                       enteringIds.has(item.id) ? 'translate-y-2 opacity-0' : 'translate-y-0 opacity-100',
                     ].join(' ')}
                   >
                     <div className="flex items-start justify-between gap-4">
                       <div className="min-w-0">
-                        <p className="text-xs font-semibold text-[#6E6E73]">#{index + 1}</p>
+                        <p className="text-xs font-semibold text-[#6E6E73] dark:text-gray-400">#{index + 1}</p>
                         {editingId === item.id ? (
                           <div className="mt-2 space-y-2">
                             <input
                               value={draft.name}
                               onChange={(e) => setDraft((prev) => ({ ...prev, name: e.target.value }))}
-                              className="w-full rounded-lg border border-black/10 bg-white px-2.5 py-1.5 text-xs outline-none transition focus:border-[#0071E3] focus:ring-2 focus:ring-[#0071E3]/20"
+                              className="w-full rounded-lg border border-black/10 bg-white px-2.5 py-1.5 text-xs text-[#1D1D1F] outline-none transition focus:border-[#0071E3] focus:ring-2 focus:ring-[#0071E3]/20 dark:border-white/10 dark:bg-gray-900 dark:text-gray-100"
                               placeholder="Name"
                             />
                             {!isDrag ? (
@@ -157,26 +157,26 @@ export function ItemList({ ranking, onDeleteItem, onUpdateItem, onReorderItems }
                                 step="any"
                                 value={draft.value}
                                 onChange={(e) => setDraft((prev) => ({ ...prev, value: e.target.value }))}
-                                className="w-full rounded-lg border border-black/10 bg-white px-2.5 py-1.5 text-xs outline-none transition focus:border-[#0071E3] focus:ring-2 focus:ring-[#0071E3]/20"
+                                className="w-full rounded-lg border border-black/10 bg-white px-2.5 py-1.5 text-xs text-[#1D1D1F] outline-none transition focus:border-[#0071E3] focus:ring-2 focus:ring-[#0071E3]/20 dark:border-white/10 dark:bg-gray-900 dark:text-gray-100"
                                 placeholder={valueLabel}
                               />
                             ) : null}
                             <input
                               value={draft.notes}
                               onChange={(e) => setDraft((prev) => ({ ...prev, notes: e.target.value }))}
-                              className="w-full rounded-lg border border-black/10 bg-white px-2.5 py-1.5 text-xs outline-none transition focus:border-[#0071E3] focus:ring-2 focus:ring-[#0071E3]/20"
+                              className="w-full rounded-lg border border-black/10 bg-white px-2.5 py-1.5 text-xs text-[#1D1D1F] outline-none transition focus:border-[#0071E3] focus:ring-2 focus:ring-[#0071E3]/20 dark:border-white/10 dark:bg-gray-900 dark:text-gray-100"
                               placeholder="Notes (optional)"
                             />
                             {editError ? <p className="text-xs text-red-600">{editError}</p> : null}
                           </div>
                         ) : (
                           <>
-                            <p className="truncate text-sm font-medium text-[#1D1D1F]">{item.name}</p>
+                            <p className="truncate text-sm font-medium text-[#1D1D1F] dark:text-gray-100">{item.name}</p>
                             {!isDrag ? (
-                              <p className="mt-1 text-xs text-[#6E6E73]">{`${item.value} ${valueLabel}`.trim()}</p>
+                              <p className="mt-1 text-xs text-[#6E6E73] dark:text-gray-400">{`${item.value} ${valueLabel}`.trim()}</p>
                             ) : null}
                             {item.notes ? (
-                              <p className="mt-2 text-xs leading-relaxed text-[#6E6E73]">{item.notes}</p>
+                              <p className="mt-2 text-xs leading-relaxed text-[#6E6E73] dark:text-gray-400">{item.notes}</p>
                             ) : null}
                           </>
                         )}
