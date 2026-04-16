@@ -12,6 +12,15 @@ export function ProfileModal({ open, onClose }) {
     setAvatar(profile.avatar || '')
   }, [open, profile.name, profile.avatar])
 
+  useEffect(() => {
+    if (!open) return
+    function onKeyDown(e) {
+      if (e.key === 'Escape') onClose?.()
+    }
+    window.addEventListener('keydown', onKeyDown)
+    return () => window.removeEventListener('keydown', onKeyDown)
+  }, [open, onClose])
+
   if (!open) return null
 
   function handleFileChange(e) {
@@ -34,11 +43,15 @@ export function ProfileModal({ open, onClose }) {
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4 py-8 backdrop-blur-sm"
-      onMouseDown={(ev) => {
-        if (ev.target === ev.currentTarget) onClose?.()
-      }}
+      onClick={() => onClose?.()}
+      role="presentation"
     >
-      <div className="relative w-full max-w-md rounded-2xl bg-white p-6 shadow-xl ring-1 ring-black/5">
+      <div
+        className="relative w-full max-w-md rounded-2xl bg-white p-6 shadow-xl ring-1 ring-black/5"
+        onClick={(e) => e.stopPropagation()}
+        role="dialog"
+        aria-modal="true"
+      >
         <button
           type="button"
           onClick={onClose}

@@ -71,19 +71,19 @@ export function CreateRankingModal({ open, onClose, onCreate, rankings = [] }) {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center px-4 py-8"
-      onMouseDown={(e) => {
-        if (e.target === e.currentTarget) onClose?.()
-      }}
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/20 px-4 py-8 backdrop-blur-sm"
+      onClick={() => onClose?.()}
+      role="presentation"
     >
-      <div className="absolute inset-0 bg-black/20 backdrop-blur-sm" />
-
       <div
         className={[
           'relative w-full max-w-lg max-h-[80vh] overflow-y-auto rounded-2xl bg-white p-6 shadow-[0_24px_80px_rgba(0,0,0,0.18)] ring-1 ring-black/5',
           'transition duration-200 ease-out',
           animateIn ? 'opacity-100 scale-100' : 'opacity-0 scale-95',
         ].join(' ')}
+        onClick={(e) => e.stopPropagation()}
+        role="dialog"
+        aria-modal="true"
       >
         <div className="flex items-start justify-between gap-4">
           <div>

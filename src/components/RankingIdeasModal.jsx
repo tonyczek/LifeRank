@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { rankingTypeShortLabel } from '../utils/rankingTypeUi'
 
 const RANKING_IDEAS = {
@@ -54,17 +55,29 @@ function TypeBadge({ type }) {
 }
 
 export function RankingIdeasModal({ open, onClose, onCreateFromIdea }) {
+  useEffect(() => {
+    if (!open) return
+    function onKeyDown(e) {
+      if (e.key === 'Escape') onClose?.()
+    }
+    window.addEventListener('keydown', onKeyDown)
+    return () => window.removeEventListener('keydown', onKeyDown)
+  }, [open, onClose])
+
   if (!open) return null
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center px-4 py-8"
-      onMouseDown={(e) => {
-        if (e.target === e.currentTarget) onClose?.()
-      }}
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/20 px-4 py-8 backdrop-blur-sm"
+      onClick={() => onClose?.()}
+      role="presentation"
     >
-      <div className="absolute inset-0 bg-black/20 backdrop-blur-sm" />
-      <div className="relative w-full max-w-3xl max-h-[80vh] overflow-y-auto rounded-2xl bg-white p-6 shadow-[0_24px_80px_rgba(0,0,0,0.18)] ring-1 ring-black/5">
+      <div
+        className="relative w-full max-w-3xl max-h-[80vh] overflow-y-auto rounded-2xl bg-white p-6 shadow-[0_24px_80px_rgba(0,0,0,0.18)] ring-1 ring-black/5"
+        onClick={(e) => e.stopPropagation()}
+        role="dialog"
+        aria-modal="true"
+      >
         <div className="flex items-start justify-between gap-4">
           <div>
             <h2 className="text-lg font-semibold tracking-tight text-[#1D1D1F]">Ideas for rankings</h2>
