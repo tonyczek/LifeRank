@@ -8,7 +8,7 @@ export function ProfileModal({ open, onClose }) {
 
   useEffect(() => {
     if (!open) return
-    setName(profile.name)
+    setName(String(profile.name ?? '').slice(0, 20))
     setAvatar(profile.avatar || '')
   }, [open, profile.name, profile.avatar])
 
@@ -34,7 +34,7 @@ export function ProfileModal({ open, onClose }) {
   function handleSave(e) {
     e.preventDefault()
     updateProfile({
-      name: name.trim(),
+      name: name.trim().slice(0, 20),
       avatar: typeof avatar === 'string' ? avatar.trim() : '',
     })
     onClose?.()
@@ -69,10 +69,12 @@ export function ProfileModal({ open, onClose }) {
             <label className="text-sm font-medium text-[#1D1D1F]">Name</label>
             <input
               value={name}
-              onChange={(e) => setName(e.target.value)}
+              onChange={(e) => setName(e.target.value.slice(0, 20))}
+              maxLength={20}
               className="mt-2 w-full rounded-xl border border-black/10 bg-white px-3 py-2 text-sm outline-none transition focus:border-[#0071E3] focus:ring-2 focus:ring-[#0071E3]/20"
               placeholder="Your name"
             />
+            <p className="mt-1 text-xs text-[#6E6E73]">{name.length}/20 characters</p>
           </div>
 
           <div>

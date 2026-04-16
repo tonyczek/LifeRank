@@ -207,10 +207,21 @@ export function HomePage() {
               <button
                 type="button"
                 onClick={() => setIsProfileOpen(true)}
-                className="flex h-10 w-10 shrink-0 cursor-pointer items-center justify-center rounded-lg border border-gray-200 bg-white leading-none text-[#1D1D1F] transition hover:bg-black/5 active:scale-[0.98] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0071E3]"
-                aria-label="Profile"
+                className="inline-flex h-10 max-w-[200px] shrink-0 cursor-pointer items-center gap-2 rounded-lg border border-gray-200 bg-white px-3 transition hover:bg-black/5 active:scale-[0.98] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0071E3]"
+                aria-label={
+                  profile.name?.trim()
+                    ? `Profile: ${profile.name.trim().slice(0, 24)}${profile.name.trim().length > 24 ? '…' : ''}`
+                    : 'Profile'
+                }
               >
-                <img src={profileIcon} alt="" className="h-7 w-7 object-contain" />
+                <img
+                  src={profile.avatar?.trim() ? profile.avatar : profileIcon}
+                  alt=""
+                  className="h-6 w-6 shrink-0 rounded-full object-cover ring-1 ring-black/10"
+                />
+                <span className="hidden min-w-0 max-w-[100px] shrink truncate overflow-hidden text-left text-sm font-medium text-[#1D1D1F] sm:inline-block">
+                  {profile.name?.trim() ? profile.name.trim() : 'Anonymous'}
+                </span>
               </button>
               <input
                 ref={importInputRef}
