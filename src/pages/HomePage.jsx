@@ -117,14 +117,14 @@ export function HomePage() {
             </div>
             <p className="mt-1 text-sm text-[#6E6E73] dark:text-gray-400">Your life. Ranked.</p>
           </div>
-          <div className="flex flex-wrap items-center gap-4">
+          <div className="flex min-w-0 flex-1 flex-wrap items-center justify-end gap-y-2 sm:flex-nowrap">
             <div className="flex items-center gap-2">
-              <div className="inline-flex rounded-xl bg-white p-1 ring-1 ring-black/10 transition-colors duration-200 dark:bg-gray-800 dark:ring-white/10">
+              <div className="inline-flex h-10 shrink-0 items-stretch gap-0.5 rounded-xl bg-white p-1 ring-1 ring-black/10 transition-colors duration-200 dark:bg-gray-800 dark:ring-white/10">
                 <button
                   type="button"
                   onClick={() => setViewMode('grouped')}
                   className={[
-                    'rounded-lg px-3 py-1.5 text-sm font-medium transition',
+                    'flex items-center justify-center rounded-lg px-4 text-sm font-medium transition',
                     viewMode === 'grouped'
                       ? 'bg-[#0071E3] text-white'
                       : 'text-[#6E6E73] hover:bg-black/5 hover:text-[#1D1D1F] dark:text-gray-400 dark:hover:bg-white/10 dark:hover:text-gray-100',
@@ -136,7 +136,7 @@ export function HomePage() {
                   type="button"
                   onClick={() => setViewMode('all')}
                   className={[
-                    'rounded-lg px-3 py-1.5 text-sm font-medium transition',
+                    'flex items-center justify-center rounded-lg px-4 text-sm font-medium transition',
                     viewMode === 'all'
                       ? 'bg-[#0071E3] text-white'
                       : 'text-[#6E6E73] hover:bg-black/5 hover:text-[#1D1D1F] dark:text-gray-400 dark:hover:bg-white/10 dark:hover:text-gray-100',
@@ -145,15 +145,19 @@ export function HomePage() {
                   All
                 </button>
               </div>
+            </div>
+            <div
+              className="mx-3 h-8 w-[2px] shrink-0 self-center rounded-full bg-gray-300 opacity-80 dark:bg-gray-600"
+              aria-hidden
+            />
+            <div className="flex items-center gap-2">
               <button
                 type="button"
                 onClick={() => setIsIdeasOpen(true)}
-                className="inline-flex items-center justify-center rounded-xl bg-white px-4 py-2 text-sm font-medium text-[#1D1D1F] ring-1 ring-black/10 transition hover:bg-black/5 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0071E3] dark:bg-gray-800 dark:text-gray-100 dark:ring-white/10 dark:hover:bg-white/10"
+                className="inline-flex h-10 shrink-0 items-center justify-center rounded-lg border border-gray-200 bg-white px-4 text-sm font-medium text-[#1D1D1F] transition hover:bg-gray-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0071E3] focus-visible:ring-offset-2 focus-visible:ring-offset-[#F5F5F7] dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100 dark:hover:bg-gray-800 dark:focus-visible:ring-offset-gray-950"
               >
-                ✨ Ideas for rankings
+                ✨ Ideas
               </button>
-            </div>
-            <div className="flex items-center gap-2">
               <button
                 type="button"
                 onClick={() => setIsCreateOpen(true)}
@@ -161,11 +165,17 @@ export function HomePage() {
               >
                 New Ranking
               </button>
+            </div>
+            <div
+              className="mx-3 h-8 w-[2px] shrink-0 self-center rounded-full bg-gray-300 opacity-80 dark:bg-gray-600"
+              aria-hidden
+            />
+            <div className="flex items-center gap-2">
               <div className="relative" ref={settingsMenuRef}>
                 <button
                   type="button"
                   onClick={() => setIsSettingsOpen((open) => !open)}
-                  className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-gray-200 bg-white text-lg leading-none text-[#1D1D1F] transition hover:bg-black/5 active:scale-[0.98] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0071E3] dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100 dark:hover:bg-white/10"
+                  className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-gray-200 bg-white text-lg leading-none text-[#1D1D1F] transition hover:bg-gray-100 active:scale-[0.98] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0071E3] dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100 dark:hover:bg-gray-800"
                   aria-expanded={isSettingsOpen}
                   aria-haspopup="menu"
                   aria-label="Settings"
@@ -218,7 +228,7 @@ export function HomePage() {
               <button
                 type="button"
                 onClick={() => setIsProfileOpen(true)}
-                className="inline-flex h-10 max-w-[200px] shrink-0 cursor-pointer items-center gap-2 rounded-lg border border-gray-200 bg-white px-3 transition hover:bg-black/5 active:scale-[0.98] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0071E3] dark:border-gray-600 dark:bg-gray-800 dark:hover:bg-white/10"
+                className="inline-flex h-10 max-w-[200px] shrink-0 cursor-pointer items-center gap-2 rounded-lg border border-gray-200 bg-white px-3 transition hover:bg-gray-100 active:scale-[0.98] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0071E3] dark:border-gray-600 dark:bg-gray-800 dark:hover:bg-gray-800"
                 aria-label={
                   profile.name?.trim()
                     ? `Profile: ${profile.name.trim().slice(0, 24)}${profile.name.trim().length > 24 ? '…' : ''}`
