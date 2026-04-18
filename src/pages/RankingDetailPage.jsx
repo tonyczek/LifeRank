@@ -28,26 +28,15 @@ function medal(rank) {
   return '•'
 }
 
-function shareExportAvatarPlaceholderClass(themeId) {
-  if (themeId === 'default' || themeId === 'minimal') {
-    return 'bg-black/10 text-gray-800 ring-1 ring-black/10'
-  }
-  return 'bg-white/20 text-white ring-1 ring-white/30'
-}
-
-/** PNG snapshot root: no cross-origin images (html-to-image / CORS). */
+/** PNG snapshot root: no external images (html-to-image / CORS). */
 function RankingShareExportCard({
   containerRef,
   exportTheme,
-  themeId,
   ranking,
   profile,
   exportCount,
   topNForExport,
 }) {
-  const isExport = true
-  const avatarUrl = profile.avatar?.trim() || ''
-
   return (
     <div
       ref={containerRef}
@@ -66,32 +55,10 @@ function RankingShareExportCard({
           <span className="mr-2 inline-block align-middle">{ranking.emoji || '🏆'}</span>
           <span className="align-middle">{ranking.name}</span>
         </h3>
-      </header>
-
-      <div className="mt-4 flex items-center justify-center gap-3">
-        {!isExport && avatarUrl ? (
-          <img
-            src={avatarUrl}
-            alt=""
-            crossOrigin="anonymous"
-            className="h-10 w-10 shrink-0 rounded-full object-cover"
-          />
-        ) : null}
-        {isExport ? (
-          <div
-            className={[
-              'flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-xl leading-none',
-              shareExportAvatarPlaceholderClass(themeId),
-            ].join(' ')}
-            aria-hidden
-          >
-            👤
-          </div>
-        ) : null}
-        <span className={['text-base font-medium', exportTheme.subtext].join(' ')}>
+        <p className={['mt-2 text-base font-medium', exportTheme.subtext].join(' ')}>
           Created by {profile.name?.trim() ? profile.name.trim() : 'Anonymous'}
-        </span>
-      </div>
+        </p>
+      </header>
 
       <div className="mt-6 space-y-3">
         {Array.from({ length: exportCount }, (_, index) => {
@@ -157,7 +124,7 @@ function isImageClipboardWriteSupported() {
 }
 
 const SHARE_ACTION_BUTTON_CLASS =
-  'inline-flex h-10 shrink-0 items-center justify-center gap-1.5 rounded-xl border border-gray-200 bg-white px-5 text-sm font-medium text-[#1D1D1F] shadow-sm transition-colors duration-200 hover:bg-gray-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0071E3] focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:bg-white dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100 dark:hover:bg-gray-700 dark:focus-visible:ring-offset-gray-900 dark:disabled:hover:bg-gray-800'
+  'inline-flex h-10 shrink-0 items-center justify-center gap-1.5 whitespace-nowrap rounded-xl border border-gray-200 bg-white px-5 text-sm font-medium text-[#1D1D1F] shadow-sm transition-colors duration-200 hover:bg-gray-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0071E3] focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:bg-white sm:px-6 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100 dark:hover:bg-gray-700 dark:focus-visible:ring-offset-gray-900 dark:disabled:hover:bg-gray-800'
 
 const EXPORT_THEME_IDS = ['default', 'dark', 'blue', 'purple', 'minimal']
 
@@ -494,7 +461,6 @@ export function RankingDetailPage() {
               <RankingShareExportCard
                 containerRef={exportRef}
                 exportTheme={exportTheme}
-                themeId={theme}
                 ranking={ranking}
                 profile={profile}
                 exportCount={exportCount}
@@ -529,17 +495,17 @@ export function RankingDetailPage() {
               className={SHARE_ACTION_BUTTON_CLASS}
             >
               <span aria-hidden>📋</span>
-              Copy
+              Copy image
             </button>
             <button
               type="button"
               onClick={handleExportImage}
               disabled={isExporting}
-              aria-label="Download ranking image"
+              aria-label="Download image"
               className={SHARE_ACTION_BUTTON_CLASS}
             >
               <span aria-hidden>⬇️</span>
-              {isExporting ? 'Preparing…' : 'Download'}
+              {isExporting ? 'Preparing…' : 'Download image'}
             </button>
             <button
               type="button"
