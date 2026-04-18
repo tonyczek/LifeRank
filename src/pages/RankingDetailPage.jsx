@@ -28,6 +28,126 @@ function medal(rank) {
   return '•'
 }
 
+function shareExportAvatarPlaceholderClass(themeId) {
+  if (themeId === 'default' || themeId === 'minimal') {
+    return 'bg-black/10 text-gray-800 ring-1 ring-black/10'
+  }
+  return 'bg-white/20 text-white ring-1 ring-white/30'
+}
+
+/** PNG snapshot root: no cross-origin images (html-to-image / CORS). */
+function RankingShareExportCard({
+  containerRef,
+  exportTheme,
+  themeId,
+  ranking,
+  profile,
+  exportCount,
+  topNForExport,
+}) {
+  const isExport = true
+  const avatarUrl = profile.avatar?.trim() || ''
+
+  return (
+    <div
+      ref={containerRef}
+      className={[
+        'box-border min-h-min w-[720px] max-w-full shrink-0 overflow-visible rounded-2xl p-10 shadow-xl',
+        exportTheme.container,
+      ].join(' ')}
+    >
+      <header className="text-center">
+        <h3
+          className={[
+            'break-words text-3xl font-semibold leading-tight tracking-tight',
+            exportTheme.text,
+          ].join(' ')}
+        >
+          <span className="mr-2 inline-block align-middle">{ranking.emoji || '🏆'}</span>
+          <span className="align-middle">{ranking.name}</span>
+        </h3>
+      </header>
+
+      <div className="mt-4 flex items-center justify-center gap-3">
+        {!isExport && avatarUrl ? (
+          <img
+            src={avatarUrl}
+            alt=""
+            crossOrigin="anonymous"
+            className="h-10 w-10 shrink-0 rounded-full object-cover"
+          />
+        ) : null}
+        {isExport ? (
+          <div
+            className={[
+              'flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-xl leading-none',
+              shareExportAvatarPlaceholderClass(themeId),
+            ].join(' ')}
+            aria-hidden
+          >
+            👤
+          </div>
+        ) : null}
+        <span className={['text-base font-medium', exportTheme.subtext].join(' ')}>
+          Created by {profile.name?.trim() ? profile.name.trim() : 'Anonymous'}
+        </span>
+      </div>
+
+      <div className="mt-6 space-y-3">
+        {Array.from({ length: exportCount }, (_, index) => {
+          const item = topNForExport[index]
+          const rank = index + 1
+          const isFirst = rank === 1 && Boolean(item)
+          const valueText =
+            item && ranking.type !== 'drag'
+              ? rankingItemRowValueText({
+                  type: ranking.type,
+                  value: item.value,
+                  metricLabel: ranking.metricLabel,
+                })
+              : item
+                ? ''
+                : '—'
+          return (
+            <div
+              key={index}
+              className={[
+                'grid grid-cols-[2.5rem_2.25rem_minmax(0,1fr)_minmax(0,11rem)] items-center gap-3 rounded-xl px-4 py-3',
+                isFirst ? exportTheme.rowFirst : exportTheme.rowBg,
+              ].join(' ')}
+            >
+              <span className={['text-base font-semibold tabular-nums', exportTheme.rowMuted].join(' ')}>{rank}</span>
+              <span className="text-lg leading-none">{medal(rank)}</span>
+              <span className={['min-w-0 truncate text-base font-medium', exportTheme.rowName].join(' ')}>
+                {item?.name || '—'}
+              </span>
+              <span
+                className={[
+                  'min-w-0 break-words text-right text-sm font-semibold tabular-nums',
+                  exportTheme.rowValue,
+                ].join(' ')}
+              >
+                {valueText}
+              </span>
+            </div>
+          )
+        })}
+      </div>
+
+      <div
+        className={[
+          'mt-8 flex w-full shrink-0 justify-between border-t pt-4 text-xs',
+          exportTheme.footerBorder,
+          exportTheme.subtext,
+        ].join(' ')}
+      >
+        <span>Created with LifeRank</span>
+        <span>liferank.app</span>
+      </div>
+    </div>
+  )
+}
+
 function isImageClipboardWriteSupported() {
   if (typeof navigator === 'undefined' || typeof window === 'undefined') return false
   if (!window.isSecureContext) return false
@@ -210,10 +330,9 @@ export function RankingDetailPage() {
     } catch (e) {
       console.error(e)
       if (objectUrl) URL.revokeObjectURL(objectUrl)
-      const detail = e instanceof Error ? e.message : String(e)
       setShareFeedback({
         variant: 'error',
-        message: `Export failed: ${detail}`,
+        message: 'Export failed',
       })
       window.setTimeout(() => setShareFeedback(null), 6500)
     } finally {
@@ -372,96 +491,15 @@ export function RankingDetailPage() {
           <div className="mt-6 flex min-h-0 max-h-[70vh] flex-1 justify-center overflow-x-auto overflow-y-auto py-2">
             <div className="flex shrink-0 origin-top scale-[0.67] justify-center overflow-visible">
               {/* Single export root: everything below must stay inside this node for toPng */}
-              <div
-                ref={exportRef}
-                className={[
-                  'box-border min-h-min w-[720px] max-w-full shrink-0 overflow-visible rounded-2xl p-10 shadow-xl',
-                  exportTheme.container,
-                ].join(' ')}
-              >
-                <header className="text-center">
-                  <h3
-                    className={[
-                      'break-words text-3xl font-semibold leading-tight tracking-tight',
-                      exportTheme.text,
-                    ].join(' ')}
-                  >
-                    <span className="mr-2 inline-block align-middle">{ranking.emoji || '🏆'}</span>
-                    <span className="align-middle">{ranking.name}</span>
-                  </h3>
-                </header>
-
-                <div className="mt-4 flex items-center justify-center gap-3">
-                  {profile.avatar ? (
-                    <img
-                      src={profile.avatar}
-                      alt="avatar"
-                      className="h-10 w-10 shrink-0 rounded-full object-cover"
-                    />
-                  ) : null}
-                  <span className={['text-base font-medium', exportTheme.subtext].join(' ')}>
-                    Created by {profile.name?.trim() ? profile.name.trim() : 'Anonymous'}
-                  </span>
-                </div>
-
-                <div className="mt-6 space-y-3">
-                  {Array.from({ length: exportCount }, (_, index) => {
-                    const item = topNForExport[index]
-                    const rank = index + 1
-                    const isFirst = rank === 1 && Boolean(item)
-                    const valueText =
-                      item && ranking.type !== 'drag'
-                        ? rankingItemRowValueText({
-                            type: ranking.type,
-                            value: item.value,
-                            metricLabel: ranking.metricLabel,
-                          })
-                        : item
-                          ? ''
-                          : '—'
-                    return (
-                      <div
-                        key={index}
-                        className={[
-                          'grid grid-cols-[2.5rem_2.25rem_minmax(0,1fr)_minmax(0,11rem)] items-center gap-3 rounded-xl px-4 py-3',
-                          isFirst ? exportTheme.rowFirst : exportTheme.rowBg,
-                        ].join(' ')}
-                      >
-                        <span
-                          className={['text-base font-semibold tabular-nums', exportTheme.rowMuted].join(' ')}
-                        >
-                          {rank}
-                        </span>
-                        <span className="text-lg leading-none">{medal(rank)}</span>
-                        <span
-                          className={['min-w-0 truncate text-base font-medium', exportTheme.rowName].join(' ')}
-                        >
-                          {item?.name || '—'}
-                        </span>
-                        <span
-                          className={[
-                            'min-w-0 break-words text-right text-sm font-semibold tabular-nums',
-                            exportTheme.rowValue,
-                          ].join(' ')}
-                        >
-                          {valueText}
-                        </span>
-                      </div>
-                    )
-                  })}
-                </div>
-
-                <div
-                  className={[
-                    'mt-8 flex w-full shrink-0 justify-between border-t pt-4 text-xs',
-                    exportTheme.footerBorder,
-                    exportTheme.subtext,
-                  ].join(' ')}
-                >
-                  <span>Created with LifeRank</span>
-                  <span>liferank.app</span>
-                </div>
-              </div>
+              <RankingShareExportCard
+                containerRef={exportRef}
+                exportTheme={exportTheme}
+                themeId={theme}
+                ranking={ranking}
+                profile={profile}
+                exportCount={exportCount}
+                topNForExport={topNForExport}
+              />
             </div>
           </div>
 
@@ -478,10 +516,9 @@ export function RankingDetailPage() {
                   window.setTimeout(() => setShareFeedback(null), 2800)
                 } catch (e) {
                   console.error(e)
-                  const detail = e instanceof Error ? e.message : String(e)
                   setShareFeedback({
                     variant: 'error',
-                    message: `Export failed: ${detail}`,
+                    message: 'Export failed',
                   })
                   window.setTimeout(() => setShareFeedback(null), 4000)
                 }
