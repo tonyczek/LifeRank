@@ -207,12 +207,13 @@ export function RankingDetailPage() {
       window.setTimeout(() => {
         if (objectUrl) URL.revokeObjectURL(objectUrl)
       }, 250)
-    } catch {
+    } catch (e) {
+      console.error(e)
       if (objectUrl) URL.revokeObjectURL(objectUrl)
+      const detail = e instanceof Error ? e.message : String(e)
       setShareFeedback({
         variant: 'error',
-        message:
-          'Download blocked by your browser. Try disabling your browser shields or use Chrome/Edge.',
+        message: `Export failed: ${detail}`,
       })
       window.setTimeout(() => setShareFeedback(null), 6500)
     } finally {
@@ -475,10 +476,12 @@ export function RankingDetailPage() {
                   await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })])
                   setShareFeedback({ variant: 'success', message: 'Copied! Share it 🚀' })
                   window.setTimeout(() => setShareFeedback(null), 2800)
-                } catch {
+                } catch (e) {
+                  console.error(e)
+                  const detail = e instanceof Error ? e.message : String(e)
                   setShareFeedback({
                     variant: 'error',
-                    message: 'Copy not supported in your browser. Use Download instead 👍',
+                    message: `Export failed: ${detail}`,
                   })
                   window.setTimeout(() => setShareFeedback(null), 4000)
                 }
@@ -514,8 +517,10 @@ export function RankingDetailPage() {
                   await navigator.clipboard.writeText(built.url)
                   setShareFeedback({ variant: 'success', message: 'Link copied' })
                   window.setTimeout(() => setShareFeedback(null), 2800)
-                } catch {
-                  setShareFeedback({ variant: 'error', message: 'Could not copy link' })
+                } catch (e) {
+                  console.error(e)
+                  const detail = e instanceof Error ? e.message : String(e)
+                  setShareFeedback({ variant: 'error', message: `Copy failed: ${detail}` })
                   window.setTimeout(() => setShareFeedback(null), 4000)
                 }
               }}
